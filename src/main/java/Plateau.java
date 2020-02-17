@@ -40,8 +40,10 @@ public class Plateau {
             System.out.println("Choisissez une position entre 1 et 10.");
             positionBateau = scanner.nextInt();
         }
+
         positionBateau = positionBateau - 1;
         Case caseBateau = cases.get(positionBateau);
+
         caseBateau.setValeur("B");
     }
 }
