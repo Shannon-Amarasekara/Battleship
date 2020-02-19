@@ -1,3 +1,5 @@
+import com.sun.jdi.PrimitiveValue;
+
 import java.util.Scanner;
 
 public class ToucherCouler {
@@ -9,7 +11,7 @@ public class ToucherCouler {
 
         Plateau plateauDuJoueur = creerUnPlateau();
 
-        placerUnBateauObligatoirement(scanner, plateauDuJoueur);
+        placerDesBateaux(scanner, plateauDuJoueur);
 
         plateauDuJoueur.afficherPlateau();
 
@@ -50,7 +52,7 @@ public class ToucherCouler {
         return plateauEnemi;
     }
 
-    private static void placerUnBateauObligatoirement(Scanner scanner, Plateau plateau) {
+    private static void placerDesBateaux(Scanner scanner, Plateau plateau) {
         System.out.println("Choisissez une position pour votre bateau entre cases 1 et 10.");
         int positionBateau = scanner.nextInt();
 
@@ -58,6 +60,17 @@ public class ToucherCouler {
         System.out.println("Vous avez place votre premier bateau.");
 
         placerBateauxSupplementaires(scanner, plateau);
+    }
+
+    private static void verifierSiLaPositionEstDisponible( int poisiton, Plateau plateau){
+
+        Case caseBateau = plateau.getCases().get(poisiton);
+
+        if (caseBateau.getValeur() == "B") {
+            System.out.println("Cette position n'est pas disponible. Un bateau est deja place dans cette position.");
+        }
+
+        else caseBateau.setValeur("B");
     }
 
     private static void placerBateauxSupplementaires(Scanner scanner, Plateau plateau) {
@@ -79,6 +92,7 @@ public class ToucherCouler {
                 compteDeBateaux++;
             }
         }
+
         System.out.println("Vous avez place tout vos bateaux.");
     }
 }

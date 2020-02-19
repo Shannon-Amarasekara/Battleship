@@ -1,3 +1,5 @@
+import jdk.swing.interop.SwingInterOpUtils;
+
 import java.util.List;
 import java.util.Scanner;
 
@@ -7,6 +9,10 @@ public class Plateau {
 
     public Plateau(List<Case> cases) {
         this.cases = cases;
+    }
+
+    public List<Case> getCases() {
+        return cases;
     }
 
     public void afficherPlateau() {
@@ -36,14 +42,11 @@ public class Plateau {
 
     public void placerUnBateauSurLePlateau(int positionBateau) {
         Scanner scanner = new Scanner(System.in);
+
         while (positionBateau < 1 || positionBateau > 10) {
             System.out.println("Choisissez une position entre 1 et 10.");
             positionBateau = scanner.nextInt();
         }
-
         positionBateau = positionBateau - 1;
-        Case caseBateau = cases.get(positionBateau);
-
-        caseBateau.setValeur("B");
     }
 }
