@@ -11,7 +11,7 @@ public class ToucherCouler {
 
         Plateau plateauDuJoueur = creerUnPlateau();
 
-        placerDesBateaux(scanner, plateauDuJoueur);
+        placerUnBateauObligatoirement(scanner, plateauDuJoueur);
 
         plateauDuJoueur.afficherPlateau();
 
@@ -52,48 +52,62 @@ public class ToucherCouler {
         return plateauEnemi;
     }
 
-    private static void placerDesBateaux(Scanner scanner, Plateau plateau) {
+    private static boolean verifierLaPosition(Plateau plateau, int positionBateau) {
+        if (positionBateau >= 1 && positionBateau <= 10) {
+            Case caseBateau = plateau.getCases().get(positionBateau - 1);
+            if (caseBateau.getValeur() != "B") {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
+    private static void placerUnBateauObligatoirement(Scanner scanner, Plateau plateau) {
         System.out.println("Choisissez une position pour votre bateau entre cases 1 et 10.");
         int positionBateau = scanner.nextInt();
 
-        plateau.placerUnBateauSurLePlateau(positionBateau);
-        System.out.println("Vous avez place votre premier bateau.");
-
-        placerBateauxSupplementaires(scanner, plateau);
-    }
-
-    private static void verifierSiLaPositionEstDisponible( int poisiton, Plateau plateau){
-
-        Case caseBateau = plateau.getCases().get(poisiton);
-
-        if (caseBateau.getValeur() == "B") {
-            System.out.println("Cette position n'est pas disponible. Un bateau est deja place dans cette position.");
+        while (!verifierLaPosition(plateau, positionBateau)) {
+            System.out.println("Choisissez une autre position pour votre bateau entre cases 1 et 10.");
+            positionBateau = scanner.nextInt();
         }
 
-        else caseBateau.setValeur("B");
+        plateau.placerUnBateauSurLePlateau(positionBateau);
+        System.out.println("Vous avez place votre premier bateau.");
+        placerBateauxSupplementaires(scanner, plateau);
+
     }
+
 
     private static void placerBateauxSupplementaires(Scanner scanner, Plateau plateau) {
         int compteDeBateaux = 1;
 
-        while ((compteDeBateaux) < 3) {
-
+        while (compteDeBateaux < 3) {
             System.out.println("Voulez vous placer un autre bateau?");
-            String reponsePlacerUnAutreBateau = scanner.next();
+            String reponse = scanner.next();
 
-            if (reponsePlacerUnAutreBateau.equals("non")) {
-                compteDeBateaux = 3;
-
-            } else if (reponsePlacerUnAutreBateau.equals("oui")) {
-
-                System.out.println("Choisissez une position entre 1 et 10.");
+            if (reponse.equals("oui")) {
+                System.out.println("Choisissez une position entre 1 et 10");
                 int positionBateau = scanner.nextInt();
-                plateau.placerUnBateauSurLePlateau(positionBateau);
-                compteDeBateaux++;
+
+                while (!verifierLaPosition(plateau, positionBateau)) {
+                    System.out.println("Position non disponible. Choisissez une autre position entre 1 et 10");
+                    positionBateau = scanner.nextInt();
+                }
+
+                if (verifierLaPosition(plateau, positionBateau)) {
+                    plateau.placerUnBateauSurLePlateau(positionBateau);
+                    System.out.println("Vous avez place ce bateau dans la position " + positionBateau);
+                    compteDeBateaux = compteDeBateaux + 1;
+                }
+
+            } else {
+                compteDeBateaux = 3;
+            }
+
+            if (compteDeBateaux == 3) {
+                System.out.println("Vous avez place tous vos bateaux");
             }
         }
-
-        System.out.println("Vous avez place tout vos bateaux.");
     }
 }
-
