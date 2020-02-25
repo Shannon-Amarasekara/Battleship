@@ -138,6 +138,8 @@ public class ToucherCouler {
         int position = 1 + (int) (Math.random() * 10);
         Case caseAttaque = plateauDuJoueur.getCases().get(position - 1);
 
+        //ne peut pas attaquer 2x la meme case
+
         if (caseAttaque.getValeur().equals("B")) {
             caseAttaque.setValeur("D");
             System.out.println("Votre adversaire a attaque la position " + position + " .");
