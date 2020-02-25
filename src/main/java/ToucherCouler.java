@@ -18,7 +18,7 @@ public class ToucherCouler {
         plateauEnemi.afficherPlateau();
 
         attaquerLePlateauEnemi(scanner, plateauEnemi);
-        plateauEnemi.afficherPlateau();
+        enemiAttaquePlateauDuJoueur(plateauDuJoueur);
 
 
         //introduction au jeu
@@ -130,5 +130,24 @@ public class ToucherCouler {
         } else if (!caseAttaque.getValeur().equals("B")) {
             System.out.println("Aucun bateau touche...");
         }
+        System.out.println("Voici le plateau adversaire");
+        plateauEnemi.afficherPlateau();
+    }
+
+    public static void enemiAttaquePlateauDuJoueur(Plateau plateauDuJoueur) {
+        int position = 1 + (int) (Math.random() * 10);
+        Case caseAttaque = plateauDuJoueur.getCases().get(position - 1);
+
+        if (caseAttaque.getValeur().equals("B")) {
+            caseAttaque.setValeur("D");
+            System.out.println("Votre adversaire a attaque la position " + position + " .");
+            System.out.println("Un de vos bateaux a ete coule!");
+            System.out.println("Voici votre plateau");
+        } else if (!caseAttaque.getValeur().equals("B")) {
+            System.out.println("Votre adversaire a attaque la position " + position + " .");
+            System.out.println("Aucun bateaux n'a ete touche!");
+        }
+        System.out.println("Voici votre plateau.");
+        plateauDuJoueur.afficherPlateau();
     }
 }
