@@ -1,8 +1,18 @@
 import java.util.Scanner;
 
+//introduction au jeu
+//creer le plateau joueur
+//placer les bateaux joueurs - max 3
+//creer le plateau enemi
+//placer bateaux 1-3 au hasard dans position au hasard
+//joueur et enemi attaque le plateau de l'autre chacun leur tour
+//quand un bateau a ete touche, il coule
+//une fois que les 3 bateaux (joueur ou enemi) ont ete coule
+//END GAME
+
 public class ToucherCouler {
 
-    public static void main(String args[]) {
+    public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
         introductionAuJeu();
@@ -20,17 +30,6 @@ public class ToucherCouler {
         attaquerLePlateauEnemi(scanner, plateauEnemi);
         enemiAttaquePlateauDuJoueur(plateauDuJoueur);
 
-
-        //introduction au jeu
-        //creer le plateau joueur
-        //placer les bateaux joueurs - max 3
-        //creer le plateau enemi
-        //placer bateaux 1-3 au hasard dans position au hasard
-        //joueur et enemi attaque le plateau de l'autre chacun leur tour
-        //quand un bateau a ete touche, il coule
-        //une fois que les 3 bateaux (joueur ou enemi) ont ete coule
-        //END GAME
-
     }
 
     private static void introductionAuJeu() {
@@ -39,8 +38,7 @@ public class ToucherCouler {
     }
 
     private static Plateau creerUnPlateau() {
-        Plateau plateau = Plateau.creerUnPlateau10Cases();
-        return plateau;
+        return Plateau.creerUnPlateau10Cases();
     }
 
     private static Plateau creerUnPlateauEnnemi() {
@@ -56,9 +54,7 @@ public class ToucherCouler {
     private static boolean verifierLaPosition(Plateau plateau, int positionBateau) {
         if (positionBateau >= 1 && positionBateau <= 10) {
             Case caseBateau = plateau.getCases().get(positionBateau - 1);
-            if (caseBateau.getValeur() != "B") {
-                return true;
-            }
+            return !caseBateau.getValeurDeCase().equals(ValeurDeCase.BATEAU);
         }
         return false;
     }
@@ -111,7 +107,7 @@ public class ToucherCouler {
         }
     }
 
-    public static void attaquerLePlateauEnemi(Scanner scanner, Plateau plateauEnemi) {
+    private static void attaquerLePlateauEnemi(Scanner scanner, Plateau plateauEnemi) {
         System.out.println("Quelle position entre 1 et 10 voulez vous attaquer?");
         int positionAttaque = scanner.nextInt();
 
@@ -121,31 +117,32 @@ public class ToucherCouler {
             positionAttaque = scanner.nextInt();
         }
 
-        positionAttaque = positionAttaque - 1;
-        Case caseAttaque = plateauEnemi.getCases().get(positionAttaque);
-
-        if (caseAttaque.getValeur().equals("B")) {
-            plateauEnemi.getCases().get(positionAttaque).setValeur("D");
+        if (getValeurDeCase(plateauEnemi, positionAttaque).equals(ValeurDeCase.BATEAU)) {
+            plateauEnemi.getCases().get(positionAttaque).setValeurDeCase(ValeurDeCase.BATEAU_COULE);
             System.out.println("Bravo! Vous avez detruit un bateau enemi.");
-        } else if (!caseAttaque.getValeur().equals("B")) {
+        } else {
             System.out.println("Aucun bateau touche...");
         }
         System.out.println("Voici le plateau adversaire");
         plateauEnemi.afficherPlateau();
     }
 
-    public static void enemiAttaquePlateauDuJoueur(Plateau plateauDuJoueur) {
+    private static ValeurDeCase getValeurDeCase(Plateau plateauEnemi, int positionAttaque) {
+        return plateauEnemi.getCases().get(positionAttaque - 1).getValeurDeCase();
+    }
+
+    private static void enemiAttaquePlateauDuJoueur(Plateau plateauDuJoueur) {
         int position = 1 + (int) (Math.random() * 10);
         Case caseAttaque = plateauDuJoueur.getCases().get(position - 1);
 
         //ne peut pas attaquer 2x la meme case
 
-        if (caseAttaque.getValeur().equals("B")) {
-            caseAttaque.setValeur("D");
+        if (caseAttaque.getValeurDeCase().equals(ValeurDeCase.BATEAU)) {
+            caseAttaque.setValeurDeCase(ValeurDeCase.BATEAU_COULE);
             System.out.println("Votre adversaire a attaque la position " + position + " .");
             System.out.println("Un de vos bateaux a ete coule!");
             System.out.println("Voici votre plateau");
-        } else if (!caseAttaque.getValeur().equals("B")) {
+        } else {
             System.out.println("Votre adversaire a attaque la position " + position + " .");
             System.out.println("Aucun bateaux n'a ete touche!");
         }

@@ -1,24 +1,22 @@
-import java.util.List;
 import java.util.Objects;
-import java.util.Random;
 
 public class Case {
-    private String valeur;
+    private ValeurDeCase valeurDeCase;
 
-    public Case(String valeur) {
-        this.valeur = valeur;
+    public Case(ValeurDeCase valeurDeCase) {
+        this.valeurDeCase = valeurDeCase;
     }
 
-    public void afficherCase() {
-        System.out.print(this.valeur);
+    public void afficherRepresentationSurLePlateau() {
+        System.out.print(this.valeurDeCase.getRepresentationSurLePlateau());
     }
 
-    public void setValeur(String valeur) {
-        this.valeur = valeur;
+    public void setValeurDeCase(ValeurDeCase valeurDeCase) {
+        this.valeurDeCase = valeurDeCase;
     }
 
-    public String getValeur() {
-        return valeur;
+    public ValeurDeCase getValeurDeCase() {
+        return valeurDeCase;
     }
 
     @Override
@@ -26,12 +24,12 @@ public class Case {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Case aCase = (Case) o;
-        return Objects.equals(valeur, aCase.valeur);
+        return Objects.equals(valeurDeCase, aCase.valeurDeCase);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(valeur);
+        return Objects.hash(valeurDeCase);
     }
 }
 
