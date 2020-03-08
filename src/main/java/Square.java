@@ -8,7 +8,7 @@ public class Square {
     }
 
     public void displayRepresentationOnTheBoard() {
-        System.out.print(this.valueOfSquare.getRepresentationOnTheBoard());
+        System.out.print(this.valueOfSquare.getRepresentationSurLePlateau());
     }
 
     public void setValueOfSquare(ValueOfSquare valueOfSquare) {
@@ -23,8 +23,8 @@ public class Square {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Square aCase = (Square) o;
-        return Objects.equals(valueOfSquare, aCase.valueOfSquare);
+        Square aSquare = (Square) o;
+        return Objects.equals(valueOfSquare, aSquare.valueOfSquare);
     }
 
     @Override
@@ -32,8 +32,5 @@ public class Square {
         return Objects.hash(valueOfSquare);
     }
 }
-
-
-
 
 

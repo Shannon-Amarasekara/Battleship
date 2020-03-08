@@ -6,11 +6,11 @@ public enum ValueOfSquare {
 
     private String representationOnTheBoard;
 
-     ValueOfSquare(String representationOnTheBoard){
-        this.representationOnTheBoard = representationOnTheBoard;
+    ValueOfSquare(String representationSurLePlateau){
+        this.representationOnTheBoard = representationSurLePlateau;
     }
 
-    public String getRepresentationOnTheBoard() {
+    public String getRepresentationSurLePlateau() {
         return representationOnTheBoard;
     }
 }

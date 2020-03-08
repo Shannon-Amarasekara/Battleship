@@ -4,7 +4,7 @@ public class Board {
 
     private List<Square> squares;
 
-    public Board(List<Square> cases) {
+    public Board(List<Square> squares) {
         this.squares = squares;
     }
 
@@ -15,8 +15,8 @@ public class Board {
     public void displayBoard() {
 
         for (int i = 0; i < squares.size(); i++) {
-            Square aCase = squares.get(i);
-            aCase.displayRepresentationOnTheBoard();
+            Square aSquare = squares.get(i);
+            aSquare.displayRepresentationOnTheBoard();
         }
         System.out.println();
     }
@@ -38,19 +38,11 @@ public class Board {
         return board;
     }
 
-    public static Board createABoardOf10Squares_2() {
-        Square case1 = new Square(ValueOfSquare.EMPTY);
+    public void placeABoatOnTheBoard(int boatPosition) {
 
-        Board plateau = new Board(List.of(case1, case1, case1, case1, case1, case1, case1, case1, case1, case1));
+        boatPosition = boatPosition - 1;
+        Square squareBateau = squares.get(boatPosition);
 
-        return plateau;
-    }
-
-    public void placeABoatOnTheBoard(int positionBoat) {
-
-        positionBoat = positionBoat - 1;
-        Square squareBoat = squares.get(positionBoat);
-
-        squareBoat.setValueOfSquare(ValueOfSquare.BOAT);
+        squareBateau.setValueOfSquare(ValueOfSquare.BOAT);
     }
 }
