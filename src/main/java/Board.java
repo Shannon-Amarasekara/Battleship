@@ -1,57 +1,56 @@
 import java.util.List;
-import java.util.Scanner;
 
 public class Board {
 
-    private List<Case> cases;
+    private List<Square> squares;
 
-    public Board(List<Case> cases) {
-        this.cases = cases;
+    public Board(List<Square> cases) {
+        this.squares = squares;
     }
 
-    public List<Case> getCases() {
-        return cases;
+    public List<Square> getSquares() {
+        return squares;
     }
 
-    public void afficherPlateau() {
+    public void displayBoard() {
 
-        for (int i = 0; i < cases.size(); i++) {
-            Case aCase = cases.get(i);
-            aCase.afficherRepresentationSurLePlateau();
+        for (int i = 0; i < squares.size(); i++) {
+            Square aCase = squares.get(i);
+            aCase.displayRepresentationOnTheBoard();
         }
         System.out.println();
     }
 
-    public static Board creerUnPlateau10Cases() {
-        Case case1 = new Case(ValeurDeCase.VIDE);
-        Case case2 = new Case(ValeurDeCase.VIDE);
-        Case case3 = new Case(ValeurDeCase.VIDE);
-        Case case4 = new Case(ValeurDeCase.VIDE);
-        Case case5 = new Case(ValeurDeCase.VIDE);
-        Case case6 = new Case(ValeurDeCase.VIDE);
-        Case case7 = new Case(ValeurDeCase.VIDE);
-        Case case8 = new Case(ValeurDeCase.VIDE);
-        Case case9 = new Case(ValeurDeCase.VIDE);
-        Case case10 = new Case(ValeurDeCase.VIDE);
+    public static Board createABoardOf10Squares() {
+        Square square1 = new Square(ValueOfSquare.EMPTY);
+        Square square2 = new Square(ValueOfSquare.EMPTY);
+        Square square3 = new Square(ValueOfSquare.EMPTY);
+        Square square4 = new Square(ValueOfSquare.EMPTY);
+        Square square5 = new Square(ValueOfSquare.EMPTY);
+        Square square6 = new Square(ValueOfSquare.EMPTY);
+        Square square7 = new Square(ValueOfSquare.EMPTY);
+        Square square8 = new Square(ValueOfSquare.EMPTY);
+        Square square9 = new Square(ValueOfSquare.EMPTY);
+        Square square10 = new Square(ValueOfSquare.EMPTY);
 
-        Board plateau = new Board(List.of(case1, case2, case3, case4, case5, case6, case7, case8, case9, case10));
+        Board board = new Board(List.of(square1, square2, square3, square4, square5, square6, square7, square8, square9, square10));
 
-        return plateau;
+        return board;
     }
 
-    public static Board creerUnPlateau10Cases2() {
-        Case case1 = new Case(ValeurDeCase.VIDE);
+    public static Board createABoardOf10Squares_2() {
+        Square case1 = new Square(ValueOfSquare.EMPTY);
 
         Board plateau = new Board(List.of(case1, case1, case1, case1, case1, case1, case1, case1, case1, case1));
 
         return plateau;
     }
 
-    public void placerUnBateauSurLePlateau(int positionBateau) {
+    public void placeABoatOnTheBoard(int positionBoat) {
 
-        positionBateau = positionBateau - 1;
-        Case caseBateau = cases.get(positionBateau);
+        positionBoat = positionBoat - 1;
+        Square squareBoat = squares.get(positionBoat);
 
-        caseBateau.setValeurDeCase(ValeurDeCase.BATEAU);
+        squareBoat.setValueOfSquare(ValueOfSquare.BOAT);
     }
 }

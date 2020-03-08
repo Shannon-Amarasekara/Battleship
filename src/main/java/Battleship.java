@@ -15,139 +15,139 @@ public class Battleship {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
-        introductionAuJeu();
+        introductionToTheGame();
 
-        Plateau plateauDuJoueur = creerUnPlateau();
+        Board plateauDuJoueur = createABoard();
 
         placerUnBateauObligatoirement(scanner, plateauDuJoueur);
 
-        plateauDuJoueur.afficherPlateau();
+        plateauDuJoueur.displayBoard();
 
-        Plateau plateauEnemi = creerUnPlateauEnnemi();
+        Board enemyBoard = createAnEnemyBoard();
         System.out.println("Voici le plateau ennemi");
-        plateauEnemi.afficherPlateau();
+        enemyBoard.displayBoard();
 
-        attaquerLePlateauEnemi(scanner, plateauEnemi);
-        enemiAttaquePlateauDuJoueur(plateauDuJoueur);
+        attackTheEnemyBoard(scanner, enemyBoard);
+        enemyAttacksThePlayerBoard(plateauDuJoueur);
 
     }
 
-    private static void introductionAuJeu() {
-        System.out.println("Bienvenue au Toucher Couler.");
-        System.out.println("Voice votre plateau.");
+    private static void introductionToTheGame() {
+        System.out.println("Welcome to Battleship.");
+        System.out.println("Here is your board.");
     }
 
-    private static Plateau creerUnPlateau() {
-        return Plateau.creerUnPlateau10Cases();
+    private static Board createABoard() {
+        return Board.createABoardOf10Squares();
     }
 
-    private static Plateau creerUnPlateauEnnemi() {
-        Plateau plateauEnemi = creerUnPlateau();
+    private static Board createAnEnemyBoard() {
+        Board enemyBoard = createABoard();
         int randomCounterOfEnemiBoats = 1 + (int) (Math.random() * 3);
         for (int i = 0; i < randomCounterOfEnemiBoats; i++) {
             int randomBoatPosition = 1 + (int) (Math.random() * 10);
-            plateauEnemi.placerUnBateauSurLePlateau(randomBoatPosition);
+            enemyBoard.placeABoatOnTheBoard(randomBoatPosition);
         }
-        return plateauEnemi;
+        return enemyBoard;
     }
 
-    private static boolean verifierLaPosition(Plateau plateau, int positionBateau) {
-        if (positionBateau >= 1 && positionBateau <= 10) {
-            Case caseBateau = plateau.getCases().get(positionBateau - 1);
-            return !caseBateau.getValeurDeCase().equals(ValeurDeCase.BATEAU);
+    private static boolean verifyThePosition(Board board, int boatPosition) {
+        if (boatPosition >= 1 && boatPosition <= 10) {
+            Square caseBateau = board.getSquares().get(boatPosition - 1);
+            return !caseBateau.getValueOfSquare().equals(ValueOfSquare.BOAT);
         }
         return false;
     }
 
 
-    private static void placerUnBateauObligatoirement(Scanner scanner, Plateau plateau) {
-        System.out.println("Choisissez une position pour votre bateau entre cases 1 et 10.");
-        int positionBateau = scanner.nextInt();
+    private static void placerUnBateauObligatoirement(Scanner scanner, Board board) {
+        System.out.println("Choose a position to place your boat between 1 and 10.");
+        int boatPosition = scanner.nextInt();
 
-        while (!verifierLaPosition(plateau, positionBateau)) {
-            System.out.println("Choisissez une autre position pour votre bateau entre cases 1 et 10.");
-            positionBateau = scanner.nextInt();
+        while (!verifyThePosition(board, boatPosition)) {
+            System.out.println("Choose a different position to place your boat between 1 and 10.");
+            boatPosition = scanner.nextInt();
         }
 
-        plateau.placerUnBateauSurLePlateau(positionBateau);
-        System.out.println("Vous avez place votre premier bateau.");
-        placerBateauxSupplementaires(scanner, plateau);
+        board.placeABoatOnTheBoard(boatPosition);
+        System.out.println("You have placed your first boat.");
+        placeSupplementaryBoats(scanner, board);
 
     }
 
 
-    private static void placerBateauxSupplementaires(Scanner scanner, Plateau plateau) {
-        int compteDeBateaux = 1;
+    private static void placeSupplementaryBoats(Scanner scanner, Board board) {
+        int boatCounter = 1;
 
-        while (compteDeBateaux < 3) {
-            System.out.println("Voulez vous placer un autre bateau?");
-            String reponse = scanner.next();
+        while (boatCounter < 3) {
+            System.out.println("Would you like to place another boat?");
+            String answer = scanner.next();
 
-            if (reponse.equals("oui")) {
-                System.out.println("Choisissez une position entre 1 et 10");
-                int positionBateau = scanner.nextInt();
+            if (answer.equals("yes")) {
+                System.out.println("Choose a position to place your boat between 1 and 10.");
+                int boatPosition = scanner.nextInt();
 
-                while (!verifierLaPosition(plateau, positionBateau)) {
-                    System.out.println("Position non disponible. Choisissez une autre position entre 1 et 10");
-                    positionBateau = scanner.nextInt();
+                while (!verifyThePosition(board, boatPosition)) {
+                    System.out.println("Position not available. Choose a different position to place your boat between 1 and 10.");
+                    boatPosition = scanner.nextInt();
                 }
-                if (verifierLaPosition(plateau, positionBateau)) {
-                    plateau.placerUnBateauSurLePlateau(positionBateau);
-                    System.out.println("Vous avez place ce bateau dans la position " + positionBateau);
-                    compteDeBateaux = compteDeBateaux + 1;
+                if (verifyThePosition(board, boatPosition)) {
+                    board.placeABoatOnTheBoard(boatPosition);
+                    System.out.println("You have placed your boat in position " + boatPosition);
+                    boatCounter = boatCounter + 1;
                 }
 
             } else {
-                compteDeBateaux = 3;
+                boatCounter = 3;
             }
 
-            if (compteDeBateaux == 3) {
-                System.out.println("Vous avez place tous vos bateaux");
+            if (boatCounter == 3) {
+                System.out.println("You have placed all your boats.");
             }
         }
     }
 
-    private static void attaquerLePlateauEnemi(Scanner scanner, Plateau plateauEnemi) {
-        System.out.println("Quelle position entre 1 et 10 voulez vous attaquer?");
-        int positionAttaque = scanner.nextInt();
+    private static void attackTheEnemyBoard(Scanner scanner, Board enemyBoard) {
+        System.out.println("Which position between 1 and 10 would you like to attack?");
+        int attackPosition = scanner.nextInt();
 
-        while (positionAttaque < 1 || positionAttaque > 10) {
-            System.out.println("Cette position n'est pas disponible.");
-            System.out.println("Attaquer une position entre 1 et 10");
-            positionAttaque = scanner.nextInt();
+        while (attackPosition < 1 || attackPosition > 10) {
+            System.out.println("This position is not available.");
+            System.out.println("Attack a position between 1 and 10.");
+            attackPosition = scanner.nextInt();
         }
 
-        if (getValeurDeCase(plateauEnemi, positionAttaque).equals(ValeurDeCase.BATEAU)) {
-            plateauEnemi.getCases().get(positionAttaque - 1).setValeurDeCase(ValeurDeCase.BATEAU_COULE);
-            System.out.println("Bravo! Vous avez detruit un bateau enemi.");
+        if (getValueOfSquare(enemyBoard, attackPosition).equals(ValueOfSquare.BOAT)) {
+            enemyBoard.getSquares().get(attackPosition - 1).setValueOfSquare(ValueOfSquare.SUNK_BOAT);
+            System.out.println("Well done! You have sunk an enemy boat.");
         } else {
-            System.out.println("Aucun bateau touche...");
+            System.out.println("No boat hit...");
         }
-        System.out.println("Voici le plateau adversaire");
-        plateauEnemi.afficherPlateau();
+        System.out.println("Here is the enemy board.");
+        enemyBoard.displayBoard();
     }
 
-    private static ValeurDeCase getValeurDeCase(Plateau plateauEnemi, int positionAttaque) {
-        return plateauEnemi.getCases().get(positionAttaque - 1).getValeurDeCase();
+    private static ValueOfSquare getValueOfSquare(Board enemyBoard, int attackPosition) {
+        return enemyBoard.getSquares().get(attackPosition - 1).getValueOfSquare();
     }
 
-    private static void enemiAttaquePlateauDuJoueur(Plateau plateauDuJoueur) {
+    private static void enemyAttacksThePlayerBoard(Board playerBoard) {
         int position = 1 + (int) (Math.random() * 10);
-        Case caseAttaque = plateauDuJoueur.getCases().get(position - 1);
+        Square squareAttack = playerBoard.getSquares().get(position - 1);
 
         //ne peut pas attaquer 2x la meme case
 
-        if (caseAttaque.getValeurDeCase().equals(ValeurDeCase.BATEAU)) {
-            caseAttaque.setValeurDeCase(ValeurDeCase.BATEAU_COULE);
-            System.out.println("Votre adversaire a attaque la position " + position + " .");
-            System.out.println("Un de vos bateaux a ete coule!");
-            System.out.println("Voici votre plateau");
+        if (squareAttack.getValueOfSquare().equals(ValueOfSquare.BOAT)) {
+            squareAttack.setValueOfSquare(ValueOfSquare.SUNK_BOAT);
+            System.out.println("Your enemy attacked position " + position + " .");
+            System.out.println("One of your boats has been sunk!");
+            System.out.println("Here is your board");
         } else {
-            System.out.println("Votre adversaire a attaque la position " + position + " .");
-            System.out.println("Aucun bateaux n'a ete touche!");
+            System.out.println("Your enemy attacked position " + position + " .");
+            System.out.println("No boat was hit.");
         }
-        System.out.println("Voici votre plateau.");
-        plateauDuJoueur.afficherPlateau();
+        System.out.println("Here is your board");
+        playerBoard.displayBoard();
     }
 }
 
