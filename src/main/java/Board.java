@@ -1,11 +1,11 @@
 import java.util.List;
 import java.util.Scanner;
 
-public class Plateau {
+public class Board {
 
     private List<Case> cases;
 
-    public Plateau(List<Case> cases) {
+    public Board(List<Case> cases) {
         this.cases = cases;
     }
 
@@ -22,7 +22,7 @@ public class Plateau {
         System.out.println();
     }
 
-    public static Plateau creerUnPlateau10Cases() {
+    public static Board creerUnPlateau10Cases() {
         Case case1 = new Case(ValeurDeCase.VIDE);
         Case case2 = new Case(ValeurDeCase.VIDE);
         Case case3 = new Case(ValeurDeCase.VIDE);
@@ -34,15 +34,15 @@ public class Plateau {
         Case case9 = new Case(ValeurDeCase.VIDE);
         Case case10 = new Case(ValeurDeCase.VIDE);
 
-        Plateau plateau = new Plateau(List.of(case1, case2, case3, case4, case5, case6, case7, case8, case9, case10));
+        Board plateau = new Board(List.of(case1, case2, case3, case4, case5, case6, case7, case8, case9, case10));
 
         return plateau;
     }
 
-    public static Plateau creerUnPlateau10Cases2() {
+    public static Board creerUnPlateau10Cases2() {
         Case case1 = new Case(ValeurDeCase.VIDE);
 
-        Plateau plateau = new Plateau(List.of(case1, case1, case1, case1, case1, case1, case1, case1, case1, case1));
+        Board plateau = new Board(List.of(case1, case1, case1, case1, case1, case1, case1, case1, case1, case1));
 
         return plateau;
     }

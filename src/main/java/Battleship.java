@@ -10,7 +10,7 @@ import java.util.Scanner;
 //une fois que les 3 bateaux (joueur ou enemi) ont ete coule
 //END GAME
 
-public class ToucherCouler {
+public class Battleship {
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
@@ -118,7 +118,7 @@ public class ToucherCouler {
         }
 
         if (getValeurDeCase(plateauEnemi, positionAttaque).equals(ValeurDeCase.BATEAU)) {
-            plateauEnemi.getCases().get(positionAttaque).setValeurDeCase(ValeurDeCase.BATEAU_COULE);
+            plateauEnemi.getCases().get(positionAttaque - 1).setValeurDeCase(ValeurDeCase.BATEAU_COULE);
             System.out.println("Bravo! Vous avez detruit un bateau enemi.");
         } else {
             System.out.println("Aucun bateau touche...");
@@ -150,3 +150,16 @@ public class ToucherCouler {
         plateauDuJoueur.afficherPlateau();
     }
 }
+
+//    public static void attaquesEntreJoueurEtEnemi(Scanner scanner, Plateau plateauDuJoueur, Plateau plateauEnemi) {
+//
+//        if (plateauDuJoueur.getCases().contains(ValeurDeCase.BATEAU.getRepresentationSurLePlateau())) {
+//
+//            attaquerLePlateauEnemi(scanner, plateauEnemi);
+//            enemiAttaquePlateauDuJoueur(plateauDuJoueur);
+//
+//        } else {
+//            System.out.println("GAME OVER");
+//        }
+//    }
+//}
