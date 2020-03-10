@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 //introduction au jeu
@@ -13,14 +15,12 @@ import java.util.Scanner;
 public class Battleship {
 
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-
         introductionToTheGame();
 
         Board playerBoard = createABoard();
         playerBoard.displayBoard();
 
-        placeOneObligatoryBoat(scanner, playerBoard);
+        placeOneObligatoryBoat(playerBoard);
 
         playerBoard.displayBoard();
 
@@ -28,14 +28,13 @@ public class Battleship {
         System.out.println("Here is the enemy board.");
         enemyBoard.displayBoard();
 
-        attackTheEnemyBoard(scanner, enemyBoard);
+        attackTheEnemyBoard(enemyBoard);
         enemyAttacksThePlayerBoard(playerBoard);
 
     }
 
     private static void introductionToTheGame() {
-        System.out.println("Welcome to Battleship");
-        System.out.println("Here is your board.");
+        System.out.println("Welcome to Battleship. Here is your board.");
     }
 
     private static Board createABoard() {
@@ -52,7 +51,7 @@ public class Battleship {
         return enemyBoard;
     }
 
-    private static boolean verifyThePosition(Board board, int boatPosition) {
+    private static boolean verifyTheBoatPlacementPosition(Board board, int boatPosition) {
         if (boatPosition >= 1 && boatPosition <= 10) {
             Square squareBoat = board.getSquares().get(boatPosition - 1);
             return !squareBoat.getValueOfSquare().equals(ValueOfSquare.BOAT);
@@ -61,23 +60,25 @@ public class Battleship {
     }
 
 
-    private static void placeOneObligatoryBoat(Scanner scanner, Board board) {
+    private static void placeOneObligatoryBoat(Board board) {
+        Scanner scanner = new Scanner(System.in);
         System.out.println("Choose a position for your boat between 1 and 10.");
         int boatPosition = scanner.nextInt();
 
-        while (!verifyThePosition(board, boatPosition)) {
+        while (!verifyTheBoatPlacementPosition(board, boatPosition)) {
             System.out.println("Choose a different position for your boat between 1 and 10.");
             boatPosition = scanner.nextInt();
         }
 
         board.placeABoatOnTheBoard(boatPosition);
         System.out.println("You have placed your first boat.");
-        placeSupplementaryBoats(scanner, board);
+        placeSupplementaryBoats(board);
 
     }
 
 
-    private static void placeSupplementaryBoats(Scanner scanner, Board board) {
+    private static void placeSupplementaryBoats(Board board) {
+        Scanner scanner = new Scanner(System.in);
         int boatCount = 1;
 
         while (boatCount < 3) {
@@ -88,11 +89,11 @@ public class Battleship {
                 System.out.println("Choose a position between 1 and 10.");
                 int boatPosition = scanner.nextInt();
 
-                while (!verifyThePosition(board, boatPosition)) {
+                while (!verifyTheBoatPlacementPosition(board, boatPosition)) {
                     System.out.println("Position not available. Choose a position between 1 and 10.");
                     boatPosition = scanner.nextInt();
                 }
-                if (verifyThePosition(board, boatPosition)) {
+                if (verifyTheBoatPlacementPosition(board, boatPosition)) {
                     board.placeABoatOnTheBoard(boatPosition);
                     System.out.println("You have placed this boat in the position " + boatPosition);
                     boatCount = boatCount + 1;
@@ -108,7 +109,8 @@ public class Battleship {
         }
     }
 
-    private static void attackTheEnemyBoard(Scanner scanner, Board enemyBoard) {
+    private static void attackTheEnemyBoard(Board enemyBoard) {
+        Scanner scanner = new Scanner(System.in);
         System.out.println("Which position between 1 and 1 would you like to attack?");
         int attackPosition = scanner.nextInt();
 
@@ -132,35 +134,28 @@ public class Battleship {
         return enemyBoard.getSquares().get(attackPosition - 1).getValueOfSquare();
     }
 
-    private static void enemyAttacksThePlayerBoard(Board playerBoard) {
-        int position = 1 + (int) (Math.random() * 10);
-        Square attackSquare = playerBoard.getSquares().get(position - 1);
+    private static int calculateRandomPositionToAttack() {
+        return 1 + (int) (Math.random() * 10);
+    }
 
-        //ne peut pas attaquer 2x la meme case
+
+    private static void enemyAttacksThePlayerBoard(Board playerBoard) {
+
+        int randomPosition = calculateRandomPositionToAttack();
+
+        Square attackSquare = playerBoard.getSquares().get(randomPosition - 1);
 
         if (attackSquare.getValueOfSquare().equals(ValueOfSquare.BOAT)) {
             attackSquare.setValueOfSquare(ValueOfSquare.SUNK_BOAT);
-            System.out.println("The enemy attacked position " + position + " .");
+            System.out.println("The enemy attacked position " + randomPosition + " .");
             System.out.println("One of your boats was sunk!");
             System.out.println("Here is your board.");
         } else {
-            System.out.println("The enemy attacked position " + position + " .");
+            System.out.println("The enemy attacked position " + randomPosition + " .");
             System.out.println("No boat was hit!");
         }
         System.out.println("Here is your board.");
         playerBoard.displayBoard();
     }
-}
 
-//    public static void attaquesEntreJoueurEtEnemi(Scanner scanner, Board plateauDuJoueur, Board plateauEnemi) {
-//
-//        if (plateauDuJoueur.getSquares().contains(ValueOfSquare.BOAT.getRepresentationSurLePlateau())) {
-//
-//            attaquerLePlateauEnemi(scanner, plateauEnemi);
-//            enemiAttaquePlateauDuJoueur(plateauDuJoueur);
-//
-//        } else {
-//            System.out.println("GAME OVER");
-//        }
-//    }
-//}
+}
