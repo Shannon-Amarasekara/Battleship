@@ -28,8 +28,7 @@ public class Battleship {
         System.out.println("Here is the enemy board.");
         enemyBoard.displayBoard();
 
-        attackTheEnemyBoard(enemyBoard);
-        enemyAttacksThePlayerBoard(playerBoard);
+        playerAndEnemyAttackEachOther(playerBoard, enemyBoard);
 
     }
 
@@ -158,4 +157,25 @@ public class Battleship {
         playerBoard.displayBoard();
     }
 
+    private static void playerAndEnemyAttackEachOther(Board playerBoard, Board enemyBoard) {
+        Square squareContainingBoat = new Square(ValueOfSquare.BOAT);
+
+        while ((playerBoard.getSquares().contains(squareContainingBoat)) || (enemyBoard.getSquares().contains(squareContainingBoat))) {
+
+            attackTheEnemyBoard(enemyBoard);
+
+            if (!enemyBoard.getSquares().contains(squareContainingBoat)) {
+                System.out.println("WIN !");
+                System.exit(0);
+            }
+
+            enemyAttacksThePlayerBoard(playerBoard);
+
+            if (!playerBoard.getSquares().contains(squareContainingBoat)) {
+                System.out.println("YOU LOSE");
+                System.exit(0);
+            }
+
+        }
+    }
 }
