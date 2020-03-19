@@ -42,8 +42,8 @@ public class Battleship {
 
     private static Board createAnEnemyBoard() {
         Board enemyBoard = createABoard();
-        int randomCounterOfEnemiBoats = 1 + (int) (Math.random() * 3);
-        for (int i = 0; i < randomCounterOfEnemiBoats; i++) {
+        int randomCounterOfEnemyBoats = 1 + (int) (Math.random() * 3);
+        for (int i = 0; i < randomCounterOfEnemyBoats; i++) {
             int randomBoatPosition = 1 + (int) (Math.random() * 10);
             enemyBoard.placeABoatOnTheBoard(randomBoatPosition);
         }
@@ -81,7 +81,7 @@ public class Battleship {
         int boatCount = 1;
 
         while (boatCount < 3) {
-            System.out.println("Would you like to place another boat?");
+            System.out.println("Would you like to place another boat? (yes/no)");
             String answer = scanner.next();
 
             if (answer.equals("yes")) {
@@ -110,12 +110,12 @@ public class Battleship {
 
     private static void attackTheEnemyBoard(Board enemyBoard) {
         Scanner scanner = new Scanner(System.in);
-        System.out.println("Which position between 1 and 1 would you like to attack?");
+        System.out.println("Which position between 1 and 10 would you like to attack?");
         int attackPosition = scanner.nextInt();
 
         while (attackPosition < 1 || attackPosition > 10) {
             System.out.println("This position is not available.");
-            System.out.println("Attack a position between 1 and 10");
+            System.out.println("Attack a position between 1 and 10.");
             attackPosition = scanner.nextInt();
         }
 
