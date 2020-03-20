@@ -39,7 +39,7 @@ public class Battleship {
     private static boolean verifyTheBoatPlacementPosition(Board board, int boatPosition) {
         if (boatPosition >= 1 && boatPosition <= 10) {
             Square squareBoat = board.getSquares().get(boatPosition - 1);
-            return !squareBoat.getValueOfSquare().equals(ValueOfSquare.BOAT);
+            return !squareBoat.getValueOfSquare().equals(Square.ValueOfSquare.BOAT);
         }
         return false;
     }
@@ -117,15 +117,15 @@ public class Battleship {
     }
 
     private static boolean verifyIfABoatIsInThisPosition(Board enemyBoard, int attackPosition){
-        return getValueOfSquare(enemyBoard, attackPosition).equals(ValueOfSquare.BOAT);
+        return getValueOfSquare(enemyBoard, attackPosition).equals(Square.ValueOfSquare.BOAT);
     }
 
-    private static ValueOfSquare getValueOfSquare(Board board, int attackPosition) {
+    private static Square.ValueOfSquare getValueOfSquare(Board board, int attackPosition) {
         return board.getSquares().get(attackPosition - 1).getValueOfSquare();
     }
 
-    public static void setValueOfSquareToSunkBoat(Board board, int position){
-        board.getSquares().get(position - 1).setValueOfSquare(ValueOfSquare.SUNK_BOAT);
+    private static void setValueOfSquareToSunkBoat(Board board, int position){
+        board.getSquares().get(position - 1).setValueOfSquare(Square.ValueOfSquare.SUNK_BOAT);
     }
 
 
@@ -139,8 +139,8 @@ public class Battleship {
 
         Square attackSquare = playerBoard.getSquares().get(randomPosition - 1);
 
-        if (attackSquare.getValueOfSquare().equals(ValueOfSquare.BOAT)) {
-            attackSquare.setValueOfSquare(ValueOfSquare.SUNK_BOAT);
+        if (attackSquare.getValueOfSquare().equals(Square.ValueOfSquare.BOAT)) {
+            attackSquare.setValueOfSquare(Square.ValueOfSquare.SUNK_BOAT);
             System.out.println("The enemy attacked position " + randomPosition + " .");
             System.out.println("One of your boats was sunk!");
         } else {
@@ -152,14 +152,12 @@ public class Battleship {
     }
 
     private static void playerAndEnemyAttackEachOther(Board playerBoard, Board enemyBoard) {
-        Square squareContainingBoat = new Square(ValueOfSquare.BOAT);
+        Square squareContainingBoat = new Square(Square.ValueOfSquare.BOAT);
         while (true) {
-
             attackTheEnemyBoard(enemyBoard);
             if (!enemyBoard.getSquares().contains(squareContainingBoat)) {
                 playerWins();
             }
-
             enemyAttacksThePlayerBoard(playerBoard);
             if (!playerBoard.getSquares().contains(squareContainingBoat)) {
                 playerLoses();
