@@ -1,21 +1,39 @@
 import java.util.Objects;
 
 public class Square {
+    public enum ValueOfSquare{
+
+        EMPTY("X"),
+        BOAT("B"),
+        SUNK_BOAT("S");
+
+        private String representationOnTheBoard;
+
+        ValueOfSquare(String representationSurLePlateau){
+            this.representationOnTheBoard = representationSurLePlateau;
+        }
+
+        public String getRepresentationSurLePlateau() {
+            return representationOnTheBoard;
+        }
+    }
+
+
     private ValueOfSquare valueOfSquare;
 
-    public Square(ValueOfSquare valueOfSquare) {
+    Square(ValueOfSquare valueOfSquare) {
         this.valueOfSquare = valueOfSquare;
     }
 
-    public void displayRepresentationOnTheBoard() {
+    void displayRepresentationOnTheBoard() {
         System.out.print(this.valueOfSquare.getRepresentationSurLePlateau());
     }
 
-    public void setValueOfSquare(ValueOfSquare valueOfSquare) {
+    void setValueOfSquare(ValueOfSquare valueOfSquare) {
         this.valueOfSquare = valueOfSquare;
     }
 
-    public ValueOfSquare getValueOfSquare() {
+    ValueOfSquare getValueOfSquare() {
         return valueOfSquare;
     }
 

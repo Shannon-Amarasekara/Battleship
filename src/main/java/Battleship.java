@@ -1,16 +1,4 @@
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
-
-//introduction au jeu
-//creer le plateau joueur
-//placer les bateaux joueurs - max 3
-//creer le plateau enemi
-//placer bateaux 1-3 au hasard dans position au hasard
-//joueur et enemi attaque le plateau de l'autre chacun leur tour
-//quand un bateau a ete touche, il coule
-//une fois que les 3 bateaux (joueur ou enemi) ont ete coule
-//END GAME
 
 public class Battleship {
 
@@ -18,22 +6,20 @@ public class Battleship {
         introductionToTheGame();
 
         Board playerBoard = createABoard();
-        playerBoard.displayBoard();
+        playerBoard.displayPlayerBoard(playerBoard);
 
         placeOneObligatoryBoat(playerBoard);
-
-        playerBoard.displayBoard();
+        playerBoard.displayPlayerBoard(playerBoard);
 
         Board enemyBoard = createAnEnemyBoard();
-        System.out.println("Here is the enemy board.");
-        enemyBoard.displayBoard();
+        enemyBoard.displayEnemyBoard(enemyBoard);
 
         playerAndEnemyAttackEachOther(playerBoard, enemyBoard);
 
     }
 
     private static void introductionToTheGame() {
-        System.out.println("Welcome to Battleship. Here is your board.");
+        System.out.println("Welcome to Battleship.");
     }
 
     private static Board createABoard() {
@@ -53,7 +39,7 @@ public class Battleship {
     private static boolean verifyTheBoatPlacementPosition(Board board, int boatPosition) {
         if (boatPosition >= 1 && boatPosition <= 10) {
             Square squareBoat = board.getSquares().get(boatPosition - 1);
-            return !squareBoat.getValueOfSquare().equals(ValueOfSquare.BOAT);
+            return !squareBoat.getValueOfSquare().equals(Square.ValueOfSquare.BOAT);
         }
         return false;
     }
@@ -119,19 +105,29 @@ public class Battleship {
             attackPosition = scanner.nextInt();
         }
 
-        if (getValueOfSquare(enemyBoard, attackPosition).equals(ValueOfSquare.BOAT)) {
-            enemyBoard.getSquares().get(attackPosition - 1).setValueOfSquare(ValueOfSquare.SUNK_BOAT);
+        if (verifyIfABoatIsInThisPosition(enemyBoard, attackPosition)) {
+
+            setValueOfSquareToSunkBoat(enemyBoard, attackPosition);
             System.out.println("Well done! You have sunk an enemy boat.");
+
         } else {
             System.out.println("No boat was sunk...");
         }
-        System.out.println("Here is the enemy board.");
-        enemyBoard.displayBoard();
+        enemyBoard.displayEnemyBoard(enemyBoard);
     }
 
-    private static ValueOfSquare getValueOfSquare(Board enemyBoard, int attackPosition) {
-        return enemyBoard.getSquares().get(attackPosition - 1).getValueOfSquare();
+    private static boolean verifyIfABoatIsInThisPosition(Board enemyBoard, int attackPosition){
+        return getValueOfSquare(enemyBoard, attackPosition).equals(Square.ValueOfSquare.BOAT);
     }
+
+    private static Square.ValueOfSquare getValueOfSquare(Board board, int attackPosition) {
+        return board.getSquares().get(attackPosition - 1).getValueOfSquare();
+    }
+
+    private static void setValueOfSquareToSunkBoat(Board board, int position){
+        board.getSquares().get(position - 1).setValueOfSquare(Square.ValueOfSquare.SUNK_BOAT);
+    }
+
 
     private static int calculateRandomPositionToAttack() {
         return 1 + (int) (Math.random() * 10);
@@ -139,43 +135,43 @@ public class Battleship {
 
 
     private static void enemyAttacksThePlayerBoard(Board playerBoard) {
-
         int randomPosition = calculateRandomPositionToAttack();
 
         Square attackSquare = playerBoard.getSquares().get(randomPosition - 1);
 
-        if (attackSquare.getValueOfSquare().equals(ValueOfSquare.BOAT)) {
-            attackSquare.setValueOfSquare(ValueOfSquare.SUNK_BOAT);
+        if (attackSquare.getValueOfSquare().equals(Square.ValueOfSquare.BOAT)) {
+            attackSquare.setValueOfSquare(Square.ValueOfSquare.SUNK_BOAT);
             System.out.println("The enemy attacked position " + randomPosition + " .");
             System.out.println("One of your boats was sunk!");
-            System.out.println("Here is your board.");
         } else {
             System.out.println("The enemy attacked position " + randomPosition + " .");
             System.out.println("No boat was hit!");
         }
-        System.out.println("Here is your board.");
-        playerBoard.displayBoard();
+
+        playerBoard.displayPlayerBoard(playerBoard);
     }
 
     private static void playerAndEnemyAttackEachOther(Board playerBoard, Board enemyBoard) {
-        Square squareContainingBoat = new Square(ValueOfSquare.BOAT);
-
-        while ((playerBoard.getSquares().contains(squareContainingBoat)) || (enemyBoard.getSquares().contains(squareContainingBoat))) {
-
+        Square squareContainingBoat = new Square(Square.ValueOfSquare.BOAT);
+        while (true) {
             attackTheEnemyBoard(enemyBoard);
-
             if (!enemyBoard.getSquares().contains(squareContainingBoat)) {
-                System.out.println("WIN !");
-                System.exit(0);
+                playerWins();
             }
-
             enemyAttacksThePlayerBoard(playerBoard);
-
             if (!playerBoard.getSquares().contains(squareContainingBoat)) {
-                System.out.println("YOU LOSE");
-                System.exit(0);
+                playerLoses();
             }
-
         }
+    }
+
+    private static void playerWins(){
+        System.out.println("WIN !");
+        System.exit(0);
+    }
+
+    private static void playerLoses(){
+        System.out.println("YOU LOSE");
+        System.exit(0);
     }
 }
