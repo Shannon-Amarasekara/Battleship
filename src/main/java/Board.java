@@ -20,12 +20,12 @@ class Board {
         System.out.println();
     }
 
-    void displayEnemyBoard(Board board){
+    void displayEnemyBoard(Board board) {
         System.out.println("Here is the enemy board.");
         board.displayBoard();
     }
 
-    void displayPlayerBoard(Board board){
+    void displayPlayerBoard(Board board) {
         System.out.println("Here is your board.");
         board.displayBoard();
     }

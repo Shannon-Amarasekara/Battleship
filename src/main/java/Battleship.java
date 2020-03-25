@@ -1,3 +1,6 @@
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 import java.util.Scanner;
 
 public class Battleship {
@@ -116,7 +119,7 @@ public class Battleship {
         enemyBoard.displayEnemyBoard(enemyBoard);
     }
 
-    private static boolean verifyIfABoatIsInThisPosition(Board enemyBoard, int attackPosition){
+    private static boolean verifyIfABoatIsInThisPosition(Board enemyBoard, int attackPosition) {
         return getValueOfSquare(enemyBoard, attackPosition).equals(Square.ValueOfSquare.BOAT);
     }
 
@@ -124,53 +127,71 @@ public class Battleship {
         return board.getSquares().get(attackPosition - 1).getValueOfSquare();
     }
 
-    private static void setValueOfSquareToSunkBoat(Board board, int position){
+    private static void setValueOfSquareToSunkBoat(Board board, int position) {
         board.getSquares().get(position - 1).setValueOfSquare(Square.ValueOfSquare.SUNK_BOAT);
     }
 
-
-    private static int calculateRandomPositionToAttack() {
-        return 1 + (int) (Math.random() * 10);
+    private static List<Integer> createListOfPositions() {
+        List<Integer> listOfPositions = new ArrayList<>(10);
+        listOfPositions.add(1);
+        listOfPositions.add(2);
+        listOfPositions.add(3);
+        listOfPositions.add(4);
+        listOfPositions.add(5);
+        listOfPositions.add(6);
+        listOfPositions.add(7);
+        listOfPositions.add(8);
+        listOfPositions.add(9);
+        listOfPositions.add(10);
+        return listOfPositions;
     }
 
+    private static int calculateRandomPositionToAttack(List<Integer> listOfPositions) {
+        Random random = new Random();
+        return listOfPositions.get(random.nextInt(listOfPositions.size()));
+    }
 
-    private static void enemyAttacksThePlayerBoard(Board playerBoard) {
-        int randomPosition = calculateRandomPositionToAttack();
+    private static void enemyAttacksThePlayerBoard(Board playerBoard, List<Integer> listOfPositions) {
 
-        Square attackSquare = playerBoard.getSquares().get(randomPosition - 1);
+        int randomPosition = calculateRandomPositionToAttack(listOfPositions);
+        listOfPositions.remove(listOfPositions.indexOf(randomPosition));
 
-        if (attackSquare.getValueOfSquare().equals(Square.ValueOfSquare.BOAT)) {
-            attackSquare.setValueOfSquare(Square.ValueOfSquare.SUNK_BOAT);
+        Square squareBeingAttacked = playerBoard.getSquares().get(randomPosition - 1);
+
+        if (squareBeingAttacked.getValueOfSquare().equals(Square.ValueOfSquare.BOAT)) {
+            squareBeingAttacked.setValueOfSquare(Square.ValueOfSquare.SUNK_BOAT);
             System.out.println("The enemy attacked position " + randomPosition + " .");
             System.out.println("One of your boats was sunk!");
         } else {
             System.out.println("The enemy attacked position " + randomPosition + " .");
             System.out.println("No boat was hit!");
         }
-
         playerBoard.displayPlayerBoard(playerBoard);
     }
 
     private static void playerAndEnemyAttackEachOther(Board playerBoard, Board enemyBoard) {
         Square squareContainingBoat = new Square(Square.ValueOfSquare.BOAT);
+        List<Integer> listOfPositions = createListOfPositions();
+
         while (true) {
             attackTheEnemyBoard(enemyBoard);
             if (!enemyBoard.getSquares().contains(squareContainingBoat)) {
                 playerWins();
             }
-            enemyAttacksThePlayerBoard(playerBoard);
+
+            enemyAttacksThePlayerBoard(playerBoard, listOfPositions);
             if (!playerBoard.getSquares().contains(squareContainingBoat)) {
                 playerLoses();
             }
         }
     }
 
-    private static void playerWins(){
+    private static void playerWins() {
         System.out.println("WIN !");
         System.exit(0);
     }
 
-    private static void playerLoses(){
+    private static void playerLoses() {
         System.out.println("YOU LOSE");
         System.exit(0);
     }
