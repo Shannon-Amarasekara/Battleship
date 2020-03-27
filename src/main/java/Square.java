@@ -2,7 +2,6 @@ import java.util.Objects;
 
 public class Square {
     public enum ValueOfSquare{
-
         EMPTY("X"),
         BOAT("B"),
         SUNK_BOAT("S");

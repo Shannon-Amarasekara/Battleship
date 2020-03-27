@@ -1,21 +1,23 @@
+import javax.print.DocFlavor;
 import java.util.List;
 
 class Board {
+    private List<List<Square>> squares;
 
-    private List<Square> squares;
-
-    private Board(List<Square> squares) {
+    private Board(List<List<Square>> squares) {
         this.squares = squares;
     }
 
-    List<Square> getSquares() {
+    List<List<Square>> getSquares() {
         return squares;
     }
 
     private void displayBoard() {
         for (int i = 0; i < squares.size(); i++) {
-            Square aSquare = squares.get(i);
-            aSquare.displayRepresentationOnTheBoard();
+            for (int j = 0; j < squares.get(i).size(); j++) {
+                Square square = squares.get(i).get(j);
+                square.displayRepresentationOnTheBoard();
+            }
         }
         System.out.println();
     }
@@ -30,28 +32,42 @@ class Board {
         board.displayBoard();
     }
 
-    static Board createABoardOf10Squares() {
-        Square square1 = new Square(Square.ValueOfSquare.EMPTY);
-        Square square2 = new Square(Square.ValueOfSquare.EMPTY);
-        Square square3 = new Square(Square.ValueOfSquare.EMPTY);
-        Square square4 = new Square(Square.ValueOfSquare.EMPTY);
-        Square square5 = new Square(Square.ValueOfSquare.EMPTY);
-        Square square6 = new Square(Square.ValueOfSquare.EMPTY);
-        Square square7 = new Square(Square.ValueOfSquare.EMPTY);
-        Square square8 = new Square(Square.ValueOfSquare.EMPTY);
-        Square square9 = new Square(Square.ValueOfSquare.EMPTY);
-        Square square10 = new Square(Square.ValueOfSquare.EMPTY);
+    private static List<Square> createListOfTenSquares() {
+        Square a = new Square(Square.ValueOfSquare.EMPTY);
+        Square b = new Square(Square.ValueOfSquare.EMPTY);
+        Square c = new Square(Square.ValueOfSquare.EMPTY);
+        Square d = new Square(Square.ValueOfSquare.EMPTY);
+        Square e = new Square(Square.ValueOfSquare.EMPTY);
+        Square f = new Square(Square.ValueOfSquare.EMPTY);
+        Square g = new Square(Square.ValueOfSquare.EMPTY);
+        Square h = new Square(Square.ValueOfSquare.EMPTY);
+        Square i = new Square(Square.ValueOfSquare.EMPTY);
+        Square j = new Square(Square.ValueOfSquare.EMPTY);
 
-        Board board = new Board(List.of(square1, square2, square3, square4, square5, square6, square7, square8, square9, square10));
-
-        return board;
+        return List.of(a, b, c, d, e, f, g, h, i, j);
     }
 
-    void placeABoatOnTheBoard(int boatPosition) {
+    static Board createABoard() {
+        List<Square> listOne = createListOfTenSquares();
+        List<Square> listTwo = createListOfTenSquares();
+        List<Square> listThree = createListOfTenSquares();
+        List<Square> listFour = createListOfTenSquares();
+        List<Square> listFive = createListOfTenSquares();
+        List<Square> listSix = createListOfTenSquares();
+        List<Square> listSeven = createListOfTenSquares();
+        List<Square> listEight = createListOfTenSquares();
+        List<Square> listNine = createListOfTenSquares();
+        List<Square> listTen = createListOfTenSquares();
 
-        boatPosition = boatPosition - 1;
-        Square squareBateau = squares.get(boatPosition);
+        List<List<Square>> squares = List.of(listOne, listTwo, listThree, listFour, listFive, listSix, listSeven, listEight, listNine, listTen);
+        return new Board(squares);
+    }
 
+    void placeABoatOnTheBoard(String column, int row) {
+        List;
+
+        Square squareBateau = squares.get
         squareBateau.setValueOfSquare(Square.ValueOfSquare.BOAT);
+
     }
 }
