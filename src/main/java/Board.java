@@ -1,4 +1,5 @@
 import javax.print.DocFlavor;
+import java.util.ArrayList;
 import java.util.List;
 
 class Board {
@@ -14,6 +15,7 @@ class Board {
 
     private void displayBoard() {
         for (int i = 0; i < squares.size(); i++) {
+            System.out.println();
             for (int j = 0; j < squares.get(i).size(); j++) {
                 Square square = squares.get(i).get(j);
                 square.displayRepresentationOnTheBoard();
@@ -33,41 +35,24 @@ class Board {
     }
 
     private static List<Square> createListOfTenSquares() {
-        Square a = new Square(Square.ValueOfSquare.EMPTY);
-        Square b = new Square(Square.ValueOfSquare.EMPTY);
-        Square c = new Square(Square.ValueOfSquare.EMPTY);
-        Square d = new Square(Square.ValueOfSquare.EMPTY);
-        Square e = new Square(Square.ValueOfSquare.EMPTY);
-        Square f = new Square(Square.ValueOfSquare.EMPTY);
-        Square g = new Square(Square.ValueOfSquare.EMPTY);
-        Square h = new Square(Square.ValueOfSquare.EMPTY);
-        Square i = new Square(Square.ValueOfSquare.EMPTY);
-        Square j = new Square(Square.ValueOfSquare.EMPTY);
-
-        return List.of(a, b, c, d, e, f, g, h, i, j);
+        List<Square> squaresList = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            squaresList.add(new Square(Square.ValueOfSquare.EMPTY));
+        }
+        return squaresList;
     }
 
     static Board createABoard() {
-        List<Square> listOne = createListOfTenSquares();
-        List<Square> listTwo = createListOfTenSquares();
-        List<Square> listThree = createListOfTenSquares();
-        List<Square> listFour = createListOfTenSquares();
-        List<Square> listFive = createListOfTenSquares();
-        List<Square> listSix = createListOfTenSquares();
-        List<Square> listSeven = createListOfTenSquares();
-        List<Square> listEight = createListOfTenSquares();
-        List<Square> listNine = createListOfTenSquares();
-        List<Square> listTen = createListOfTenSquares();
-
-        List<List<Square>> squares = List.of(listOne, listTwo, listThree, listFour, listFive, listSix, listSeven, listEight, listNine, listTen);
+        List<List<Square>> squares = new ArrayList<>();
+        for(int i = 0; i < 10 ; i++){
+            squares.add(createListOfTenSquares());
+        }
         return new Board(squares);
     }
 
-    void placeABoatOnTheBoard(String column, int row) {
-        List;
-
-        Square squareBateau = squares.get
-        squareBateau.setValueOfSquare(Square.ValueOfSquare.BOAT);
+    void placeABoatOnTheBoard(int column, int row) {
+        Square squareBoat = squares.get(row -1 ).get(column);
+        squareBoat.setValueOfSquare(Square.ValueOfSquare.BOAT);
 
     }
 }

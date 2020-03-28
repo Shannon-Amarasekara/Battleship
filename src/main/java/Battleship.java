@@ -31,23 +31,18 @@ public class Battleship {
     private static Board createAnEnemyBoard() {
         Board enemyBoard = createABoard();
         int randomCounterOfEnemyBoats = 1 + (int) (Math.random() * 3);
+
         for (int i = 0; i < randomCounterOfEnemyBoats; i++) {
-            int randomBoatPosition = 1 + (int) (Math.random() * 10);
-            enemyBoard.placeABoatOnTheBoard(randomBoatPosition);
+            int randomColumn = 1 + (int) (Math.random() * 10);
+            int randomRow = 1 + (int) (Math.random() * 10);
+            enemyBoard.placeABoatOnTheBoard(randomColumn, randomRow);
         }
         return enemyBoard;
     }
 
-    private static boolean verifyTheBoatPlacementPosition(Board board, String columnBoat, int rowBoat) {
+    private static boolean verifyTheBoatPlacementPosition(Board board, int columnBoat, int rowBoat) {
         List<Square> row = board.getSquares().get(rowBoat);
-        int column = row.indexOf(columnBoat);
-        Square square = row.get(column);
-
-        if (row.contains(row.indexOf(columnBoat))) {
-            
-            return true;
-        }
-        return false;
+        return (row.contains(row.get(columnBoat)));
     }
 
     private static void placeOneObligatoryBoat(Board board) {
@@ -57,20 +52,27 @@ public class Battleship {
         System.out.println("Choose which row you want to place your first boat. (1-10)");
         int rowBoat = scanner.nextInt();
 
-        while (!verifyTheBoatPlacementPosition(board, columnBoat, rowBoat)) {
+        List<String> columnsAToJ = List.of("A", "B", "C", "D", "E", "F", "G", "H", "I", "J");
+        int column = columnsAToJ.indexOf(columnBoat);
+
+        while (!verifyTheBoatPlacementPosition(board, column, rowBoat)) {
             System.out.println("Choose a different position for your boat.");
             System.out.println("Choose which column you want to place your first boat. (A - J)");
             columnBoat = scanner.next();
             System.out.println("Choose which row you want to place your first boat. (1-10)");
             rowBoat = scanner.nextInt();
+
+            column = columnsAToJ.indexOf(columnBoat);
         }
-        board.placeABoatOnTheBoard(columnBoat, rowBoat);
+        board.placeABoatOnTheBoard(column, rowBoat);
         System.out.println("You have placed your first boat.");
         placeSupplementaryBoats(board);
     }
 
     private static void placeSupplementaryBoats(Board board) {
         Scanner scanner = new Scanner(System.in);
+        List<String> columnsAToJ = List.of("A", "B", "C", "D", "E", "F", "G", "H", "I", "J");
+
         int boatCount = 1;
 
         while (boatCount < 3) {
@@ -78,16 +80,23 @@ public class Battleship {
             String answer = scanner.next();
 
             if (answer.equals("yes")) {
-                System.out.println("Choose a position between 1 and 10.");
-                int boatPosition = scanner.nextInt();
+                System.out.println("Choose which column you want to place your first boat. (A - J)");
+                String columnBoat = scanner.next();
+                int column = columnsAToJ.indexOf(columnBoat);
+                System.out.println("Choose which row you want to place your first boat. (1-10)");
+                int rowBoat = scanner.nextInt();
 
-                while (!verifyTheBoatPlacementPosition(board, boatPosition)) {
-                    System.out.println("Position not available. Choose a position between 1 and 10.");
-                    boatPosition = scanner.nextInt();
+                while (!verifyTheBoatPlacementPosition(board, column, rowBoat)) {
+                    System.out.println("Position not available.");
+                    System.out.println("Choose which column you want to place your first boat. (A - J)");
+                    columnBoat = scanner.next();
+                    column = columnsAToJ.indexOf(columnBoat);
+                    System.out.println("Choose which row you want to place your first boat. (1-10)");
+                    rowBoat = scanner.nextInt();
                 }
-                if (verifyTheBoatPlacementPosition(board, boatPosition)) {
-                    board.placeABoatOnTheBoard(boatPosition);
-                    System.out.println("You have placed this boat in the position " + boatPosition);
+                if (verifyTheBoatPlacementPosition(board, column, rowBoat)) {
+                    board.placeABoatOnTheBoard(column, rowBoat);
+                    System.out.println("You have placed this boat in the position " + columnBoat + rowBoat);
                     boatCount = boatCount + 1;
                 }
 
@@ -103,18 +112,24 @@ public class Battleship {
 
     private static void attackTheEnemyBoard(Board enemyBoard) {
         Scanner scanner = new Scanner(System.in);
-        System.out.println("Which position between 1 and 10 would you like to attack?");
-        int attackPosition = scanner.nextInt();
+        List<String> columnsAToJ = List.of("A", "B", "C", "D", "E", "F", "G", "H", "I", "J");
 
-        while (attackPosition < 1 || attackPosition > 10) {
-            System.out.println("This position is not available.");
-            System.out.println("Attack a position between 1 and 10.");
-            attackPosition = scanner.nextInt();
+        System.out.println("Which row would you like to attack? (1-10)");
+        int rowToAttack = scanner.nextInt();
+        System.out.println("Which column would you like to attack? (A-J)");
+        String columnToAttack = scanner.next();
+
+        while ((rowToAttack < 1 || rowToAttack > 10) || (!columnsAToJ.contains(columnToAttack))) {
+            System.out.println("Which row would you like to attack? (1-10)");
+            rowToAttack = scanner.nextInt();
+            System.out.println("Which column would you like to attack? (A-J)");
+            columnToAttack = scanner.next();
         }
 
-        if (verifyIfABoatIsInThisPosition(enemyBoard, attackPosition)) {
+        int column = columnsAToJ.indexOf(columnToAttack);
 
-            setValueOfSquareToSunkBoat(enemyBoard, attackPosition);
+        if (verifyIfABoatIsInThisPosition(enemyBoard, rowToAttack, column)) {
+            setValueOfSquareToSunkBoat(enemyBoard, rowToAttack, column);
             System.out.println("Well done! You have sunk an enemy boat.");
 
         } else {
@@ -123,31 +138,20 @@ public class Battleship {
         enemyBoard.displayEnemyBoard(enemyBoard);
     }
 
-    private static boolean verifyIfABoatIsInThisPosition(Board enemyBoard, int attackPosition) {
-        return getValueOfSquare(enemyBoard, attackPosition).equals(Square.ValueOfSquare.BOAT);
+    private static boolean verifyIfABoatIsInThisPosition(Board enemyBoard, int row, int column) {
+        return getValueOfSquare(enemyBoard, row, column).equals(Square.ValueOfSquare.BOAT);
     }
 
-    private static Square.ValueOfSquare getValueOfSquare(Board board, int attackPosition) {
-        return board.getSquares().get(attackPosition - 1).getValueOfSquare();
+    private static Square.ValueOfSquare getValueOfSquare(Board board, int row, int column) {
+        return board.getSquares().get(row).get(column).getValueOfSquare();
     }
 
-    private static void setValueOfSquareToSunkBoat(Board board, int position) {
-        board.getSquares().get(position - 1).setValueOfSquare(Square.ValueOfSquare.SUNK_BOAT);
+    private static void setValueOfSquareToSunkBoat(Board board, int row, int column) {
+        board.getSquares().get(row).get(column).setValueOfSquare(Square.ValueOfSquare.SUNK_BOAT);
     }
 
-    private static List<Integer> createListOfPositions() {
-        List<Integer> listOfPositions = new ArrayList<>(10);
-        listOfPositions.add(1);
-        listOfPositions.add(2);
-        listOfPositions.add(3);
-        listOfPositions.add(4);
-        listOfPositions.add(5);
-        listOfPositions.add(6);
-        listOfPositions.add(7);
-        listOfPositions.add(8);
-        listOfPositions.add(9);
-        listOfPositions.add(10);
-        return listOfPositions;
+    private static List<Integer> createListOfTenPositions() {
+        return List.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
     }
 
     private static int calculateRandomPositionToAttack(List<Integer> listOfPositions) {
@@ -155,19 +159,20 @@ public class Battleship {
         return listOfPositions.get(random.nextInt(listOfPositions.size()));
     }
 
-    private static void enemyAttacksThePlayerBoard(Board playerBoard, List<Integer> listOfPositions) {
+    private static void enemyAttacksThePlayerBoard(Board playerBoard, List<Integer> listOfRows, List<Integer> listOfColumns) {
+        int randomRow = calculateRandomPositionToAttack(listOfRows);
+        int randomColumn = calculateRandomPositionToAttack(listOfColumns);
+        listOfRows.remove(listOfRows.indexOf(randomRow));
+        listOfColumns.remove(listOfColumns.indexOf(randomColumn));
 
-        int randomPosition = calculateRandomPositionToAttack(listOfPositions);
-        listOfPositions.remove(listOfPositions.indexOf(randomPosition));
+        Square squareUnderAttack = playerBoard.getSquares().get(randomRow).get(randomColumn);
 
-        Square squareBeingAttacked = playerBoard.getSquares().get(randomPosition - 1);
-
-        if (squareBeingAttacked.getValueOfSquare().equals(Square.ValueOfSquare.BOAT)) {
-            squareBeingAttacked.setValueOfSquare(Square.ValueOfSquare.SUNK_BOAT);
-            System.out.println("The enemy attacked position " + randomPosition + " .");
+        if (squareUnderAttack.getValueOfSquare().equals(Square.ValueOfSquare.BOAT)) {
+            squareUnderAttack.setValueOfSquare(Square.ValueOfSquare.SUNK_BOAT);
+            System.out.println("The enemy attacked position " + randomRow + randomColumn + " .");
             System.out.println("One of your boats was sunk!");
         } else {
-            System.out.println("The enemy attacked position " + randomPosition + " .");
+            System.out.println("The enemy attacked position " + randomRow + randomColumn + " .");
             System.out.println("No boat was hit!");
         }
         playerBoard.displayPlayerBoard(playerBoard);
@@ -175,7 +180,8 @@ public class Battleship {
 
     private static void playerAndEnemyAttackEachOther(Board playerBoard, Board enemyBoard) {
         Square boat = new Square(Square.ValueOfSquare.BOAT);
-        List<Integer> listOfPositions = createListOfPositions();
+        List<Integer> listOfRows = createListOfTenPositions();
+        List<Integer> listOfColumns = createListOfTenPositions();
 
         while (true) {
             attackTheEnemyBoard(enemyBoard);
@@ -183,7 +189,7 @@ public class Battleship {
                 playerWins();
             }
 
-            enemyAttacksThePlayerBoard(playerBoard, listOfPositions);
+            enemyAttacksThePlayerBoard(playerBoard, listOfRows, listOfColumns);
             if (!playerBoard.getSquares().contains(boat)) {
                 playerLoses();
             }
