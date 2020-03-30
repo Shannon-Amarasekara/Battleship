@@ -40,32 +40,41 @@ public class Battleship {
         return enemyBoard;
     }
 
-    private static boolean verifyTheBoatPlacementPosition(Board board, int columnBoat, int rowBoat) {
-        List<Square> row = board.getSquares().get(rowBoat);
-        return (row.contains(row.get(columnBoat)));
+    private static boolean verifyTheBoatPlacementPosition(Board board, String columnBoat, int rowBoat, List<String> columnsAtoJ) {
+        if ((rowBoat < 1 || rowBoat > 10) || (!columnsAtoJ.contains(columnBoat))) {
+
+            if (rowBoat < 1 || rowBoat > 10) {
+                System.out.println("The row " + rowBoat + " is not available.");
+            }
+            if ((!columnsAtoJ.contains(columnBoat))) {
+                System.out.println("The column " + columnBoat + " is not available.");
+            }
+
+            return false;
+        }
+        return true;
     }
 
     private static void placeOneObligatoryBoat(Board board) {
         Scanner scanner = new Scanner(System.in);
+        List<String> columnsAToJ = List.of("A", "B", "C", "D", "E", "F", "G", "H", "I", "J");
+
         System.out.println("Choose which column you want to place your first boat. (A - J)");
         String columnBoat = scanner.next();
         System.out.println("Choose which row you want to place your first boat. (1-10)");
         int rowBoat = scanner.nextInt();
 
-        List<String> columnsAToJ = List.of("A", "B", "C", "D", "E", "F", "G", "H", "I", "J");
-        int column = columnsAToJ.indexOf(columnBoat);
-
-        while (!verifyTheBoatPlacementPosition(board, column, rowBoat)) {
+        while (!verifyTheBoatPlacementPosition(board, columnBoat, rowBoat, columnsAToJ)) {
             System.out.println("Choose a different position for your boat.");
             System.out.println("Choose which column you want to place your first boat. (A - J)");
             columnBoat = scanner.next();
             System.out.println("Choose which row you want to place your first boat. (1-10)");
             rowBoat = scanner.nextInt();
-
-            column = columnsAToJ.indexOf(columnBoat);
         }
+
+        int column = columnsAToJ.indexOf(columnBoat);
         board.placeABoatOnTheBoard(column, rowBoat);
-        System.out.println("You have placed your first boat.");
+        System.out.println("You have placed your first boat in the position " + columnBoat + rowBoat + "." );
         placeSupplementaryBoats(board);
     }
 
@@ -86,17 +95,17 @@ public class Battleship {
                 System.out.println("Choose which row you want to place your first boat. (1-10)");
                 int rowBoat = scanner.nextInt();
 
-                while (!verifyTheBoatPlacementPosition(board, column, rowBoat)) {
-                    System.out.println("Position not available.");
+                while (!verifyTheBoatPlacementPosition(board, columnBoat, rowBoat, columnsAToJ)) {
+                    System.out.println("Choose a different position for your boat.");
                     System.out.println("Choose which column you want to place your first boat. (A - J)");
                     columnBoat = scanner.next();
                     column = columnsAToJ.indexOf(columnBoat);
                     System.out.println("Choose which row you want to place your first boat. (1-10)");
                     rowBoat = scanner.nextInt();
                 }
-                if (verifyTheBoatPlacementPosition(board, column, rowBoat)) {
+                if (verifyTheBoatPlacementPosition(board, columnBoat, rowBoat, columnsAToJ)) {
                     board.placeABoatOnTheBoard(column, rowBoat);
-                    System.out.println("You have placed this boat in the position " + columnBoat + rowBoat);
+                    System.out.println("You have placed this boat in the position " + columnBoat + rowBoat + " .");
                     boatCount = boatCount + 1;
                 }
 
