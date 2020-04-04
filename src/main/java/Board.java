@@ -51,7 +51,7 @@ class Board {
     }
 
     void placeABoatOnTheBoard(int column, int row) {
-        Square squareBoat = squares.get(row -1 ).get(column);
+        Square squareBoat = squares.get(row -1).get(column);
         squareBoat.setValueOfSquare(Square.ValueOfSquare.BOAT);
     }
 }
