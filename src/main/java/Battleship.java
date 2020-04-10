@@ -1,6 +1,4 @@
-import java.util.List;
-import java.util.Random;
-import java.util.Scanner;
+import java.util.*;
 
 public class Battleship {
 
@@ -174,8 +172,20 @@ public class Battleship {
         board.getSquares().get(row - 1).get(column).setValueOfSquare(Square.ValueOfSquare.SUNK_BOAT);
     }
 
-    private static List<Integer> createListOfTenPositions() {
-        return List.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+    private static ArrayList<Integer> createListOfTenPositions() {
+        ArrayList<Integer> list = new ArrayList<>();
+        list.add(1);
+        list.add(2);
+        list.add(3);
+        list.add(4);
+        list.add(5);
+        list.add(6);
+        list.add(7);
+        list.add(8);
+        list.add(9);
+        list.add(10);
+
+        return list;
     }
 
     private static int calculateRandomPositionToAttack(List<Integer> listOfPositions) {
@@ -183,25 +193,38 @@ public class Battleship {
         return listOfPositions.get(random.nextInt(listOfPositions.size()));
     }
 
+    private static  ArrayList<Integer> createListOfBoardPositions(){
+        ArrayList<Integer> listOf99Positions = new ArrayList<>();
+        for(int i = 0; i < 100 ; i++){
+            listOf99Positions.add(i);
+        }
+        return listOf99Positions;
+    }
+
     private static void enemyAttacksThePlayerBoard(Board playerBoard, List<Integer> listOfRows, List<Integer> listOfColumns) {
         int randomRow = calculateRandomPositionToAttack(listOfRows);
         int randomColumn = calculateRandomPositionToAttack(listOfColumns);
 
-        listOfRows.remove(listOfRows.indexOf(randomRow));
-        listOfColumns.remove(listOfColumns.indexOf(randomColumn));
+        String row = Integer.toString(randomRow);
+        String column = Integer.toString(randomColumn);
+        String position = row + column;
+        int positionToAttack = Integer.parseInt(position);
+
+        ArrayList<Integer> positions = createListOfBoardPositions();
+        positions.remove(positionToAttack);
 
         List<String> listOfColumnsAtoJ = List.of("A", "B", "C", "D", "E", "F", "G", "H", "I", "J");
 
         Square squareUnderAttack = playerBoard.getSquares().get(randomRow).get(randomColumn);
-        String column = listOfColumnsAtoJ.get(randomColumn - 1);
+        String columnAttacked = listOfColumnsAtoJ.get(randomColumn - 1);
 
         if (squareUnderAttack.getValueOfSquare().equals(Square.ValueOfSquare.BOAT)) {
             squareUnderAttack.setValueOfSquare(Square.ValueOfSquare.SUNK_BOAT);
-            System.out.println("The enemy attacked position " + column + randomRow + " .");
+            System.out.println("The enemy attacked position " + columnAttacked + randomRow + " .");
             System.out.println("One of your boats was sunk!");
 
         } else {
-            System.out.println("The enemy attacked position " + column + randomRow + " .");
+            System.out.println("The enemy attacked position " + columnAttacked + randomRow + " .");
             System.out.println("No boat was hit!");
         }
         playerBoard.displayPlayerBoard(playerBoard);
@@ -212,7 +235,10 @@ public class Battleship {
             for (int j = 0; j < board.getSquares().get(i).size(); j++) {
 
                 Square square = board.getSquares().get(i).get(j);
-                if (square.getValueOfSquare() == Square.ValueOfSquare.BOAT) {
+                String valueOfSquare = square.getValueOfSquare().getRepresentationSurLePlateau();
+                String value = Square.ValueOfSquare.BOAT.getRepresentationSurLePlateau();
+
+                if (valueOfSquare.equals(value)) {
                     return true;
                 }
             }
@@ -227,14 +253,14 @@ public class Battleship {
         while (true) {
 
             attackTheEnemyBoard(enemyBoard);
-//            if (!boardContainsBoats(enemyBoard)) {
-//                playerWins();
-//            }
+            if (!boardContainsBoats(enemyBoard)) {
+                playerWins();
+            }
 
             enemyAttacksThePlayerBoard(playerBoard, listOfRows, listOfColumns);
-//            if (!boardContainsBoats(playerBoard)) {
-//                playerLoses();
-//            }
+            if (!boardContainsBoats(playerBoard)) {
+                playerLoses();
+            }
         }
     }
 
