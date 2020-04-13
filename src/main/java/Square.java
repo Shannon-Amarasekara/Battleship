@@ -48,6 +48,7 @@ public class Square {
     public int hashCode() {
         return Objects.hash(valueOfSquare);
     }
+
 }
 
 
