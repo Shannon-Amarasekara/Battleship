@@ -1,5 +1,4 @@
 import java.util.Objects;
-
 public class Square {
     public enum ValueOfSquare{
         EMPTY(" X "),
@@ -16,7 +15,6 @@ public class Square {
             return representationOnTheBoard;
         }
     }
-
 
     private ValueOfSquare valueOfSquare;
 

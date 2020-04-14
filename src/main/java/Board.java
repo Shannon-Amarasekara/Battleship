@@ -50,6 +50,20 @@ class Board {
         return new Board(squares);
     }
 
+    static Board createAnEnemyBoard() {
+        Board enemyBoard = createABoard();
+        int randomCounterOfEnemyBoats = 1 + (int) (Math.random() * 3);
+
+        for (int i = 0; i < randomCounterOfEnemyBoats; i++) {
+            int randomColumn = 1 + (int) (Math.random() * 10);
+            int randomRow = 1 + (int) (Math.random() * 10);
+
+            randomColumn = randomColumn - 1;
+            enemyBoard.placeABoatOnTheBoard(randomColumn, randomRow);
+        }
+        return enemyBoard;
+    }
+
     void placeABoatOnTheBoard(int column, int row) {
         Square squareBoat = squares.get(row -1).get(column);
         squareBoat.setValueOfSquare(Square.ValueOfSquare.BOAT);
