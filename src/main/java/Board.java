@@ -57,11 +57,19 @@ class Board {
         for (int i = 0; i < randomCounterOfEnemyBoats; i++) {
             int randomColumn = 1 + (int) (Math.random() * 10);
             int randomRow = 1 + (int) (Math.random() * 10);
-
             randomColumn = randomColumn - 1;
             enemyBoard.placeABoatOnTheBoard(randomColumn, randomRow);
         }
         return enemyBoard;
+    }
+
+    boolean rowPlacementPositionExists(String rowBoat) {
+        List<String> listOfTenPositions = List.of("1", "2", "3", "4", "5", "6", "7", "8", "9", "10");
+        return listOfTenPositions.contains(rowBoat);
+    }
+
+     boolean columnPlacementPositionExists(String column, List<String> columnsAtoJ) {
+        return columnsAtoJ.contains(column);
     }
 
     void placeABoatOnTheBoard(int column, int row) {
