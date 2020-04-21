@@ -11,7 +11,7 @@ public class Battleship {
         Board playerBoard = Board.createABoard();
         displayBoard(playerBoard);
         System.out.println("Here is your board.");
-        int boatCount = placeBoats(playerBoard);
+        int boatCount = placeOneToThreeBoats(playerBoard);
 
         Board enemyBoard = Board.createBoardWithRandomlyPlacedBoats(boatCount);
         displayBoard(enemyBoard);
@@ -37,10 +37,10 @@ public class Battleship {
         System.out.println();
     }
 
-    private static int placeBoats(Board board) {
+    private static int placeOneToThreeBoats(Board board) {
         Scanner scanner = new Scanner(System.in);
         ArrayList<String> listOfBoatsPlaced = new ArrayList<>();
-        placeOneObligatoryBoat(board, listOfBoatsPlaced);
+        placeBoat(board, listOfBoatsPlaced);
         System.out.println("You have placed " + listOfBoatsPlaced.size() + " boat in the following positions: " + listOfBoatsPlaced);
 
         while (listOfBoatsPlaced.size() < 3) {
@@ -54,7 +54,7 @@ public class Battleship {
             }
 
             if (answer.equals("yes")) {
-                placeSupplementaryBoats(board, listOfBoatsPlaced);
+                placeBoat(board, listOfBoatsPlaced);
                 Collections.sort(listOfBoatsPlaced);
                 System.out.println("You have placed " + listOfBoatsPlaced.size() + " boats in the following positions: " + listOfBoatsPlaced);
             } else {
@@ -66,7 +66,7 @@ public class Battleship {
         return listOfBoatsPlaced.size();
     }
 
-    private static void placeOneObligatoryBoat(Board board, ArrayList<String> listOfBoatsPlaced) {
+    private static void placeBoat(Board board, ArrayList<String> listOfBoatsPlaced) {
         Scanner scanner = new Scanner(System.in);
         List<String> columnsAToJ = List.of("A", "B", "C", "D", "E", "F", "G", "H", "I", "J");
 
@@ -105,58 +105,16 @@ public class Battleship {
             }
         }
 
-        board.placeABoatOnTheBoard(column, row);
-        String position = columnsAToJ.get(column) + row;
-        System.out.println("You have placed your first boat in the position " + position + ".");
-        listOfBoatsPlaced.add(position);
-    }
-
-    private static void placeSupplementaryBoats(Board board, ArrayList<String> listOfBoatsPlaced) {
-        Scanner scanner = new Scanner(System.in);
-        List<String> columnsAToJ = List.of("A", "B", "C", "D", "E", "F", "G", "H", "I", "J");
-
-        int column;
-        while (true) {
-            System.out.println("Choose which column you want to place your boat. (A - J)");
-            if (scanner.hasNextInt()) {
-                System.out.println("You need to enter a character, not a number. (A -J");
-                scanner.next();
-            } else {
-                String columnInput = scanner.next();
-                if (columnsAToJ.contains(columnInput)) {
-                    column = columnsAToJ.indexOf(columnInput);
-                    if (board.columnExists(column + 1)) {
-                        break;
-                    }
-                } else {
-                    System.out.println("This column is unavailable");
-                }
-            }
-        }
-
-        int row;
-        while (true) {
-            System.out.println("Choose a row for your boat. (1-10)");
-            if (!scanner.hasNextInt()) {
-                System.out.println("You did not enter a number.");
-                scanner.next();
-            } else {
-                row = scanner.nextInt();
-                if (board.rowExists(row)) {
-                    break;
-                } else {
-                    System.out.println("This row is unavailable.");
-                }
-            }
-        }
-
         if (!aBoatIsInThisPosition(board, row, column)) {
             board.placeABoatOnTheBoard(column, row);
-            String position = (columnsAToJ.get(column)) + row;
-            System.out.println("You have placed this boat in the position " + position + ".");
-            listOfBoatsPlaced.add(position);
-        } else {
-            System.out.println("A boat has already been placed in this position. ");
+            String position = columnsAToJ.get(column) + row;
+
+            if (!listOfBoatsPlaced.contains(position)) {
+                System.out.println("You have placed your first boat in the position " + position + ".");
+                listOfBoatsPlaced.add(position);
+            } else {
+                System.out.println("You already placed a boat in this position " + position);
+            }
         }
     }
 
