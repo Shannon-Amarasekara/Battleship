@@ -1,6 +1,7 @@
 
 import java.util.*;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class Battleship {
 
@@ -110,10 +111,11 @@ public class Battleship {
             String position = columnsAToJ.get(column) + row;
 
             if (!listOfBoatsPlaced.contains(position)) {
-                System.out.println("You have placed your first boat in the position " + position + ".");
+                board.placeABoatOnTheBoard(column, row);
+                System.out.println("You have placed your boat in the position " + position + ".");
                 listOfBoatsPlaced.add(position);
             } else {
-                System.out.println("You already placed a boat in this position " + position);
+                System.out.println("You already placed a boat in the position " + position);
             }
         }
     }
@@ -143,31 +145,98 @@ public class Battleship {
         return listOf99Positions;
     }
 
-    private static void attackTheEnemyBoard(Board enemyBoard, List<String> positionsAlreadyAttacked) {
-        Scanner scanner = new Scanner(System.in);
-        List<String> columnsAToJ = List.of("A", "B", "C", "D", "E", "F", "G", "H", "I", "J");
+    private static void attackTheEnemyBoard(Board enemyBoard, ArrayList<String> positionsAlreadyAttacked) {
         String reset = "yes";
+        Scanner scanner = new Scanner(System.in);
+
         if (positionsAlreadyAttacked.size() > 0) {
-            System.out.println("You have previously attacked the following positions: " + positionsAlreadyAttacked + ".");
+            ArrayList<ArrayList<String>> list = new ArrayList<>();
+            for (int i = 0; i < 10; i++) {
+                list.add(new ArrayList<>());
+            }
+
+            for (String position : positionsAlreadyAttacked) {
+                char columnChar = position.charAt(0);
+                switch (columnChar) {
+                    case 'A':
+                        list.get(0).add(position);
+                        break;
+                    case 'B':
+                        list.get(1).add(position);
+                        break;
+                    case 'C':
+                        list.get(2).add(position);
+                        break;
+                    case 'D':
+                        list.get(3).add(position);
+                        break;
+                    case 'E':
+                        list.get(4).add(position);
+                        break;
+                    case 'F':
+                        list.get(5).add(position);
+                        break;
+                    case 'G':
+                        list.get(6).add(position);
+                        break;
+                    case 'H':
+                        list.get(7).add(position);
+                        break;
+                    case 'I':
+                        list.get(8).add(position);
+                        break;
+                    case 'J':
+                        list.get(9).add(position);
+                        break;
+                }
+            }
+
+            //TODO: find a way to sort the positions ending in "10" to the end of the list
+            System.out.println("You previously attacked the following positions: ");
+            for (ArrayList<String> columnList : list) {
+
+                if (!columnList.isEmpty()) {
+                    Collections.sort(columnList);
+
+                    for (String position : columnList) {
+
+                        if (position.endsWith("10")) {
+                            System.out.println("There is a number ending in 10");
+//                            columnList.remove(position);
+                        }
+                    }
+                    System.out.println(columnList);
+                }
+            }
         }
 
+
         while (reset.equals("yes")) {
-
-            System.out.println("Which column would you like to attack? (A-J)");
-            String columnToAttack = scanner.next();
-            int column = columnsAToJ.indexOf(columnToAttack);
-
-            while (!enemyBoard.columnExists(column)) {
-                System.out.println("This columns does not exist. Choose a different column to attack. (A - J)");
-                columnToAttack = scanner.next();
-                column = columnsAToJ.indexOf(columnToAttack);
+            List<String> columnsAToJ = List.of("A", "B", "C", "D", "E", "F", "G", "H", "I", "J");
+            int column;
+            while (true) {
+                System.out.println("Choose which column you want to attack. (A - J)");
+                if (scanner.hasNextInt()) {
+                    System.out.println("You need to enter a character, not a number. (A -J");
+                    scanner.next();
+                } else {
+                    String columnInput = scanner.next();
+                    if (columnsAToJ.contains(columnInput)) {
+                        column = columnsAToJ.indexOf(columnInput);
+                        if (enemyBoard.columnExists(column + 1)) {
+                            break;
+                        }
+                    } else {
+                        System.out.println("This column is unavailable.");
+                    }
+                }
             }
 
             int row;
             while (true) {
                 System.out.println("Which row would you like to attack? (1-10)");
                 if (!scanner.hasNextInt()) {
-                    System.out.println("You did not enter a number.");
+                    System.out.println("You need to enter a number. (1-10)");
                     scanner.next();
                 } else {
                     row = scanner.nextInt();
@@ -179,22 +248,23 @@ public class Battleship {
                 }
             }
 
+            String columnToAttack = columnsAToJ.get(column);
             if (positionsAlreadyAttacked.contains(columnToAttack + row)) {
-                System.out.println("You have already attacked this position. Choose another position.");
+                System.out.println("You have already attacked this position previously.");
                 reset = "yes";
             } else {
-                column = columnsAToJ.indexOf(columnToAttack);
+                reset = "no";
                 positionsAlreadyAttacked.add(columnToAttack + row);
-                System.out.println("You have attacked the enemy board position " + columnToAttack + row + ".");
+                System.out.println("You have attacked the enemy board position " + columnToAttack + row);
 
                 if (aBoatIsInThisPosition(enemyBoard, row, column)) {
                     setValueOfSquareToSunkBoat(enemyBoard, row, column);
                     System.out.println("Well done! You have sunk an enemy boat.");
                 } else {
-                    System.out.println("No boat was sunk...");
+                    System.out.println("No boat was hit...");
                 }
-                reset = "no";
             }
+
         }
         Collections.sort(positionsAlreadyAttacked);
         displayBoard(enemyBoard);
@@ -225,16 +295,16 @@ public class Battleship {
     }
 
     private static void playerAndEnemyAttackEachOther(Board playerBoard, Board enemyBoard) {
-        ArrayList<Integer> positions = createListOfBoardPositions();
-        List<String> positionsAlreadyAttacked = new ArrayList<>();
+        ArrayList<Integer> positionsAlreadyAttackedByEnemy = createListOfBoardPositions();
+        ArrayList<String> positionsAlreadyAttackedByPlayer = new ArrayList<>();
 
         while (true) {
-            attackTheEnemyBoard(enemyBoard, positionsAlreadyAttacked);
+            attackTheEnemyBoard(enemyBoard, positionsAlreadyAttackedByPlayer);
             if (boardContainsNoBoats(enemyBoard)) {
                 playerWins();
             }
 
-            enemyAttacksThePlayerBoard(playerBoard, positions);
+            enemyAttacksThePlayerBoard(playerBoard, positionsAlreadyAttackedByEnemy);
             if (boardContainsNoBoats(playerBoard)) {
                 playerLoses();
             }

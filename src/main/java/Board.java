@@ -49,9 +49,7 @@ class Board {
     }
 
     public void placeABoatOnTheBoard(int column, int row) {
-        if((rowExists(row)) && (columnExists(column))){
-            Square squareBoat = squares.get(row - 1).get(column);
-            squareBoat.setValueOfSquare(Square.ValueOfSquare.BOAT);
-        }
+        Square squareBoat = squares.get(row - 1).get(column);
+        squareBoat.setValueOfSquare(Square.ValueOfSquare.BOAT);
     }
 }
