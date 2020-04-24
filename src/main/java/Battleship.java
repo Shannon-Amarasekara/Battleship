@@ -145,14 +145,14 @@ public class Battleship {
         return listOf99Positions;
     }
 
-    private static void attackTheEnemyBoard(Board enemyBoard, ArrayList<String> positionsAlreadyAttacked) {
+    private static void attackTheEnemyBoard(Board enemyBoard, List<String> positionsAlreadyAttacked) {
         String reset = "yes";
         Scanner scanner = new Scanner(System.in);
 
         if (positionsAlreadyAttacked.size() > 0) {
-            ArrayList<ArrayList<String>> list = new ArrayList<>();
+            List<List<String>> list = new CopyOnWriteArrayList<>();
             for (int i = 0; i < 10; i++) {
-                list.add(new ArrayList<>());
+                list.add(new CopyOnWriteArrayList<>());
             }
 
             for (String position : positionsAlreadyAttacked) {
@@ -191,18 +191,14 @@ public class Battleship {
                 }
             }
 
-            //TODO: find a way to sort the positions ending in "10" to the end of the list
             System.out.println("You previously attacked the following positions: ");
-            for (ArrayList<String> columnList : list) {
-
+            for (List<String> columnList : list) {
                 if (!columnList.isEmpty()) {
                     Collections.sort(columnList);
-
                     for (String position : columnList) {
-
-                        if (position.endsWith("10")) {
-                            System.out.println("There is a number ending in 10");
-//                            columnList.remove(position);
+                        if (position.endsWith("0")) {
+                            columnList.remove(position);
+                            columnList.add(columnList.size(), position);
                         }
                     }
                     System.out.println(columnList);
@@ -296,7 +292,7 @@ public class Battleship {
 
     private static void playerAndEnemyAttackEachOther(Board playerBoard, Board enemyBoard) {
         ArrayList<Integer> positionsAlreadyAttackedByEnemy = createListOfBoardPositions();
-        ArrayList<String> positionsAlreadyAttackedByPlayer = new ArrayList<>();
+        List<String> positionsAlreadyAttackedByPlayer = new CopyOnWriteArrayList<>();
 
         while (true) {
             attackTheEnemyBoard(enemyBoard, positionsAlreadyAttackedByPlayer);
