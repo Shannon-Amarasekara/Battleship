@@ -1,4 +1,3 @@
-import javax.print.DocFlavor;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,27 +12,6 @@ class Board {
         return squares;
     }
 
-    private void displayBoard() {
-        for (int i = 0; i < squares.size(); i++) {
-            System.out.println();
-            for (int j = 0; j < squares.get(i).size(); j++) {
-                Square square = squares.get(i).get(j);
-                square.displayRepresentationOnTheBoard();
-            }
-        }
-        System.out.println();
-    }
-
-    void displayEnemyBoard(Board board) {
-        System.out.println("Here is the enemy board.");
-        board.displayBoard();
-    }
-
-    void displayPlayerBoard(Board board) {
-        System.out.println("Here is your board.");
-        board.displayBoard();
-    }
-
     private static List<Square> createListOfTenSquares() {
         List<Square> squaresList = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
@@ -42,16 +20,36 @@ class Board {
         return squaresList;
     }
 
-    static Board createABoard() {
+    public static Board createABoard() {
         List<List<Square>> squares = new ArrayList<>();
-        for(int i = 0; i < 10 ; i++){
+        for (int i = 0; i < 10; i++) {
             squares.add(createListOfTenSquares());
         }
         return new Board(squares);
     }
 
-    void placeABoatOnTheBoard(int column, int row) {
-        Square squareBoat = squares.get(row -1).get(column);
+    public static Board createBoardWithRandomlyPlacedBoats(int playerBoatsPlacedCount) {
+        Board enemyBoard = createABoard();
+
+        for (int i = 0; i < playerBoatsPlacedCount; i++) {
+            int randomColumn = 1 + (int) (Math.random() * 10);
+            int randomRow = 1 + (int) (Math.random() * 10);
+            randomColumn = randomColumn - 1;
+            enemyBoard.placeABoatOnTheBoard(randomColumn, randomRow);
+        }
+        return enemyBoard;
+    }
+
+    boolean rowExists(int row) {
+        return ((row <= squares.size()) && row > 0);
+    }
+
+    boolean columnExists(int column) {
+        return ((column <= squares.size()) && column > 0);
+    }
+
+    public void placeABoatOnTheBoard(int column, int row) {
+        Square squareBoat = squares.get(row - 1).get(column);
         squareBoat.setValueOfSquare(Square.ValueOfSquare.BOAT);
     }
 }
