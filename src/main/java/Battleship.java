@@ -148,51 +148,32 @@ public class Battleship {
     private static void attackTheEnemyBoard(Board enemyBoard, List<String> positionsAlreadyAttacked) {
         String reset = "yes";
         Scanner scanner = new Scanner(System.in);
+        HashMap<String, Integer> columnsAndRows = new HashMap<>();
+        columnsAndRows.put("A", 0);
+        columnsAndRows.put("B", 1);
+        columnsAndRows.put("C", 2);
+        columnsAndRows.put("D", 3);
+        columnsAndRows.put("E", 4);
+        columnsAndRows.put("F", 5);
+        columnsAndRows.put("G", 6);
+        columnsAndRows.put("H", 7);
+        columnsAndRows.put("I", 8);
+        columnsAndRows.put("J", 9);
 
         if (positionsAlreadyAttacked.size() > 0) {
-            List<List<String>> list = new CopyOnWriteArrayList<>();
+            List<List<String>> positionsInOrder = new CopyOnWriteArrayList<>();
             for (int i = 0; i < 10; i++) {
-                list.add(new CopyOnWriteArrayList<>());
+                positionsInOrder.add(new CopyOnWriteArrayList<>());
             }
 
             for (String position : positionsAlreadyAttacked) {
-                char columnChar = position.charAt(0);
-                switch (columnChar) {
-                    case 'A':
-                        list.get(0).add(position);
-                        break;
-                    case 'B':
-                        list.get(1).add(position);
-                        break;
-                    case 'C':
-                        list.get(2).add(position);
-                        break;
-                    case 'D':
-                        list.get(3).add(position);
-                        break;
-                    case 'E':
-                        list.get(4).add(position);
-                        break;
-                    case 'F':
-                        list.get(5).add(position);
-                        break;
-                    case 'G':
-                        list.get(6).add(position);
-                        break;
-                    case 'H':
-                        list.get(7).add(position);
-                        break;
-                    case 'I':
-                        list.get(8).add(position);
-                        break;
-                    case 'J':
-                        list.get(9).add(position);
-                        break;
-                }
+                String columnOfPosition = String.valueOf(position.charAt(0));
+                int keyOfColumn = columnsAndRows.get(columnOfPosition);
+                positionsInOrder.get(keyOfColumn).add(position);
             }
 
             System.out.println("You previously attacked the following positions: ");
-            for (List<String> columnList : list) {
+            for (List<String> columnList : positionsInOrder) {
                 if (!columnList.isEmpty()) {
                     Collections.sort(columnList);
                     for (String position : columnList) {
