@@ -1,11 +1,12 @@
 package Domain;
+
 import java.util.Objects;
 
 public class Square {
 
     private ValueOfSquare valueOfSquare;
 
-    Square(ValueOfSquare valueOfSquare) {
+    public Square(ValueOfSquare valueOfSquare) {
         this.valueOfSquare = valueOfSquare;
     }
 

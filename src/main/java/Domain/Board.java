@@ -1,4 +1,5 @@
 package Domain;
+import java.security.PublicKey;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -66,6 +67,10 @@ public class Board {
         return squares.get(row).get(column);
     }
 
+    public List<Square> getRow(int row){
+        return squares.get(row);
+    }
+
     public boolean boardContainsNoBoats() {
         for (int i = 0; i < squares.size(); i++) {
             for (int j = 0; j < squares.get(i).size(); j++) {
@@ -83,6 +88,6 @@ public class Board {
     }
 
     public void setValueOfSquareToSunkBoat(int row, int column) {
-        squares.get(row - 1).get(column).setValueOfSquare(Square.ValueOfSquare.SUNK_BOAT);
+        squares.get(row).get(column).setValueOfSquare(Square.ValueOfSquare.SUNK_BOAT);
     }
 }

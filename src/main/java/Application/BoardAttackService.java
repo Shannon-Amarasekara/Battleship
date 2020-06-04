@@ -1,15 +1,16 @@
 package Application;
 import Domain.Board;
+import Domain.Square;
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class BoardAttackService {
 
-   UserInputValidationService userInputValidationService = new UserInputValidationService();
+    UserInputValidationService userInputValidationService = new UserInputValidationService();
     BoardDisplayService boardDisplayService = new BoardDisplayService();
 
     public void playerAndEnemyAttackEachOther(Board playerBoard, Board enemyBoard) {
-        ArrayList<Integer> positionsAlreadyAttackedByEnemy = createListOfBoardPositions();
+        HashMap<Integer, Square> positionsAlreadyAttackedByEnemy = createListOfBoardPositions();
         List<String> positionsAlreadyAttackedByPlayer = new CopyOnWriteArrayList<>();
 
         while (true) {
@@ -17,7 +18,6 @@ public class BoardAttackService {
             if (enemyBoard.boardContainsNoBoats()) {
                 playerWins();
             }
-
             enemyAttacksThePlayerBoard(playerBoard, positionsAlreadyAttackedByEnemy);
             if (playerBoard.boardContainsNoBoats()) {
                 playerLoses();
@@ -30,7 +30,6 @@ public class BoardAttackService {
         displayPositionsPreviouslyAttackedByPlayer(positionsAlreadyAttacked);
 
         while (true) {
-
             int column = playerChoosesColumnToAttack(board, columnsAToJ);
             int row = playerChoosesRowToAttack(board);
             String columnToAttack = columnsAToJ.get(column);
@@ -60,6 +59,7 @@ public class BoardAttackService {
 
     public void displayPositionsPreviouslyAttackedByPlayer(List<String> positionsAlreadyAttacked) {
         HashMap<String, Integer> columnsAndRows = new HashMap<>();
+        // TODO CUT THIS METHOD INTO MULTIPLE METHODS
         columnsAndRows.put("A", 0);
         columnsAndRows.put("B", 1);
         columnsAndRows.put("C", 2);
@@ -99,9 +99,9 @@ public class BoardAttackService {
         }
     }
 
-    public void enemyAttacksThePlayerBoard(Board playerBoard, ArrayList<Integer> listOfPositions) {
+    public void enemyAttacksThePlayerBoard(Board playerBoard, HashMap<Integer, Square> listOfPositions) {
         int positionToAttack = calculateRandomPositionToAttack(listOfPositions);
-        listOfPositions.remove(listOfPositions.indexOf(positionToAttack));
+        listOfPositions.remove(positionToAttack);
         int row = positionToAttack / 10;
         int column = positionToAttack % 10;
 
@@ -121,9 +121,10 @@ public class BoardAttackService {
         System.out.println("Here is your board.");
     }
 
-    public int calculateRandomPositionToAttack(List<Integer> listOfPositions) {
+    public int calculateRandomPositionToAttack(HashMap<Integer, Square> listOfPositions) {
         Random random = new Random();
-        return listOfPositions.get(random.nextInt(listOfPositions.size()));
+        List<Integer> keys = new ArrayList<>(listOfPositions.keySet());
+        return keys.get(random.nextInt(keys.size()));
     }
 
     public int playerChoosesColumnToAttack(Board board, List<String> columnsAtoJ) {
@@ -135,7 +136,6 @@ public class BoardAttackService {
         return column;
     }
 
-
     public int playerChoosesRowToAttack(Board board) {
         int row = -1;
         while (row == -1) {
@@ -145,12 +145,13 @@ public class BoardAttackService {
         return row;
     }
 
-    public ArrayList<Integer> createListOfBoardPositions() {
-        ArrayList<Integer> listOf99Positions = new ArrayList<>();
+    public HashMap<Integer, Square> createListOfBoardPositions() {
+        HashMap<Integer, Square> listOf99Squares = new HashMap<>();
         for (int i = 0; i < 100; i++) {
-            listOf99Positions.add(i);
+            Square square = new Square(Square.ValueOfSquare.EMPTY);
+            listOf99Squares.put(i, square);
         }
-        return listOf99Positions;
+        return listOf99Squares;
     }
 
 
