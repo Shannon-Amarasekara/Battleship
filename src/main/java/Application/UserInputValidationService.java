@@ -1,9 +1,13 @@
+package Application;
+import Domain.Board;
 import java.util.List;
 import java.util.Scanner;
 
 public class UserInputValidationService {
 
-    public int validatePlayerColumnInput(Scanner scanner, Board board, List<String> columnsAtoJ) {
+    Scanner scanner = new Scanner(System.in);
+
+    public int validatePlayerColumnInput(Board board, List<String> columnsAtoJ) {
         int column;
         if (scanner.hasNextInt()) {
             System.out.println("You need to enter a character, not a number. (A -J");
@@ -22,7 +26,7 @@ public class UserInputValidationService {
         return -1;
     }
 
-    public int validatePlayerRowInput(Scanner scanner, Board board) {
+    public int validatePlayerRowInput(Board board) {
         int row;
         if (!scanner.hasNextInt()) {
             System.out.println("You need to enter a number. (1-10)");

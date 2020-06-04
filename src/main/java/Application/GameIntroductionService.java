@@ -1,3 +1,5 @@
+package Application;
+
 public class GameIntroductionService {
 
     public void introductionToTheGame() {

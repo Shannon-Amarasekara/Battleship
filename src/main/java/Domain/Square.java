@@ -1,3 +1,4 @@
+package Domain;
 import java.util.Objects;
 
 public class Square {
@@ -8,11 +9,11 @@ public class Square {
         this.valueOfSquare = valueOfSquare;
     }
 
-    void setValueOfSquare(ValueOfSquare valueOfSquare) {
+    public void setValueOfSquare(ValueOfSquare valueOfSquare) {
         this.valueOfSquare = valueOfSquare;
     }
 
-    ValueOfSquare getValueOfSquare() {
+    public ValueOfSquare getValueOfSquare() {
         return valueOfSquare;
     }
 

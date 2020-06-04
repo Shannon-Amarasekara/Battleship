@@ -1,3 +1,7 @@
+package Application;
+import Domain.Board;
+import Domain.Square;
+
 public class BoardDisplayService {
 
     public void displayBoard(Board board) {

@@ -1,24 +1,38 @@
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Scanner;
+package Application;
+import Domain.Board;
+import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-public class PlayerAttackService {
+public class BoardAttackService {
 
+   UserInputValidationService userInputValidationService = new UserInputValidationService();
     BoardDisplayService boardDisplayService = new BoardDisplayService();
-    BoatDetectionService boatDetectionService = new BoatDetectionService();
-    UserInputValidationService userInputValidationService = new UserInputValidationService();
+
+    public void playerAndEnemyAttackEachOther(Board playerBoard, Board enemyBoard) {
+        ArrayList<Integer> positionsAlreadyAttackedByEnemy = createListOfBoardPositions();
+        List<String> positionsAlreadyAttackedByPlayer = new CopyOnWriteArrayList<>();
+
+        while (true) {
+            attackTheEnemyBoard(enemyBoard, positionsAlreadyAttackedByPlayer);
+            if (enemyBoard.boardContainsNoBoats()) {
+                playerWins();
+            }
+
+            enemyAttacksThePlayerBoard(playerBoard, positionsAlreadyAttackedByEnemy);
+            if (playerBoard.boardContainsNoBoats()) {
+                playerLoses();
+            }
+        }
+    }
 
     public void attackTheEnemyBoard(Board board, List<String> positionsAlreadyAttacked) {
-        Scanner scanner = new Scanner(System.in);
         List<String> columnsAToJ = List.of("A", "B", "C", "D", "E", "F", "G", "H", "I", "J");
         displayPositionsPreviouslyAttackedByPlayer(positionsAlreadyAttacked);
 
         while (true) {
 
-            int column = playerChoosesColumnToAttack(board, columnsAToJ, scanner);
-            int row = playerChoosesRowToAttack(board, scanner);
+            int column = playerChoosesColumnToAttack(board, columnsAToJ);
+            int row = playerChoosesRowToAttack(board);
             String columnToAttack = columnsAToJ.get(column);
 
             if (positionsAlreadyAttacked.contains(columnToAttack + row)) {
@@ -28,8 +42,8 @@ public class PlayerAttackService {
                 positionsAlreadyAttacked.add(columnToAttack + row);
                 System.out.println("You have attacked the enemy board position " + columnToAttack + row);
 
-                if (boatDetectionService.aBoatIsInThisPosition(board, (row - 1), column)) {
-                    boatDetectionService.setValueOfSquareToSunkBoat(board, row, column);
+                if (board.aBoatIsInThisPosition(row - 1, column)) {
+                    board.setValueOfSquareToSunkBoat(row, column);
                     System.out.println("Well done! You have sunk an enemy boat.");
                     break;
 
@@ -85,22 +99,68 @@ public class PlayerAttackService {
         }
     }
 
-    public int playerChoosesColumnToAttack(Board board, List<String> columnsAtoJ, Scanner scanner) {
+    public void enemyAttacksThePlayerBoard(Board playerBoard, ArrayList<Integer> listOfPositions) {
+        int positionToAttack = calculateRandomPositionToAttack(listOfPositions);
+        listOfPositions.remove(listOfPositions.indexOf(positionToAttack));
+        int row = positionToAttack / 10;
+        int column = positionToAttack % 10;
+
+        List<String> listOfColumnsAtoJ = List.of("A", "B", "C", "D", "E", "F", "G", "H", "I", "J");
+        String columnAttacked = listOfColumnsAtoJ.get(column);
+
+        if (playerBoard.aBoatIsInThisPosition(row, column)) {
+            playerBoard.setValueOfSquareToSunkBoat(row, column);
+            System.out.println("The enemy attacked position " + columnAttacked + (row + 1) + " .");
+            System.out.println("One of your boats was sunk!");
+
+        } else {
+            System.out.println("The enemy attacked position " + columnAttacked + (row + 1) + " .");
+            System.out.println("No boat was hit!");
+        }
+        boardDisplayService.displayBoard(playerBoard);
+        System.out.println("Here is your board.");
+    }
+
+    public int calculateRandomPositionToAttack(List<Integer> listOfPositions) {
+        Random random = new Random();
+        return listOfPositions.get(random.nextInt(listOfPositions.size()));
+    }
+
+    public int playerChoosesColumnToAttack(Board board, List<String> columnsAtoJ) {
         int column = -1;
         while (column == -1) {
             System.out.println("which column would you like to attack? (A - J)");
-            column = userInputValidationService.validatePlayerColumnInput(scanner, board, columnsAtoJ);
+            column = userInputValidationService.validatePlayerColumnInput(board, columnsAtoJ);
         }
         return column;
     }
 
 
-    public int playerChoosesRowToAttack(Board board, Scanner scanner) {
+    public int playerChoosesRowToAttack(Board board) {
         int row = -1;
         while (row == -1) {
             System.out.println("Which row would you like to attack? (1-10)");
-            row = userInputValidationService.validatePlayerRowInput(scanner, board);
+            row = userInputValidationService.validatePlayerRowInput(board);
         }
         return row;
+    }
+
+    public ArrayList<Integer> createListOfBoardPositions() {
+        ArrayList<Integer> listOf99Positions = new ArrayList<>();
+        for (int i = 0; i < 100; i++) {
+            listOf99Positions.add(i);
+        }
+        return listOf99Positions;
+    }
+
+
+    public void playerWins() {
+        System.out.println("YOU WIN !");
+        System.exit(0);
+    }
+
+    public void playerLoses() {
+        System.out.println("YOU LOSE");
+        System.exit(0);
     }
 }

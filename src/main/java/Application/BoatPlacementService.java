@@ -1,3 +1,5 @@
+package Application;
+import Domain.Board;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -39,14 +41,13 @@ public class BoatPlacementService {
     }
 
     private void placeBoat(Board board, ArrayList<String> listOfBoatsPlaced) {
-        Scanner scanner = new Scanner(System.in);
         List<String> columnsAToJ = List.of("A", "B", "C", "D", "E", "F", "G", "H", "I", "J");
 
-        int column = playerChoosesColumnToPlaceBoat(board, columnsAToJ, scanner);
+        int column = playerChoosesColumnToPlaceBoat(board, columnsAToJ);
 
-        int row = playerChoosesRowToPlaceBoat(board, scanner);
+        int row = playerChoosesRowToPlaceBoat(board);
 
-        if (!aBoatIsInThisPosition(board, row, column)) {
+        if (!board.aBoatIsInThisPosition(row, column)) {
             board.placeABoatOnTheBoard(column, row);
             String position = columnsAToJ.get(column) + row;
 
@@ -61,29 +62,21 @@ public class BoatPlacementService {
         }
     }
 
-    public int playerChoosesColumnToPlaceBoat(Board board, List<String> columnsAtoJ, Scanner scanner){
+    public int playerChoosesColumnToPlaceBoat(Board board, List<String> columnsAtoJ){
         int column = -1;
         while (column == -1) {
             System.out.println("Choose which column you want to place your boat. (A - J)");
-            column = userInputValidationService.validatePlayerColumnInput(scanner, board, columnsAtoJ);
+            column = userInputValidationService.validatePlayerColumnInput(board, columnsAtoJ);
         }
         return column;
     }
 
-    public int playerChoosesRowToPlaceBoat(Board board, Scanner scanner){
+    public int playerChoosesRowToPlaceBoat(Board board){
         int row = -1;
         while (row == -1) {
             System.out.println("Choose a row for your first boat. (1-10)");
-            row = userInputValidationService.validatePlayerRowInput(scanner, board);
+            row = userInputValidationService.validatePlayerRowInput(board);
         }
         return row;
-    }
-
-    private boolean aBoatIsInThisPosition(Board board, int row, int column) {
-        return getValueOfSquare(board, row, column).equals(Square.ValueOfSquare.BOAT);
-    }
-
-    private Square.ValueOfSquare getValueOfSquare(Board board, int row, int column) {
-        return board.getSquares().get(row - 1).get(column).getValueOfSquare();
     }
 }
