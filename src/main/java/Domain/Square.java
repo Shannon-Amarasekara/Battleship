@@ -1,5 +1,4 @@
 package Domain;
-
 import java.util.Objects;
 
 public class Square {
@@ -29,23 +28,6 @@ public class Square {
     @Override
     public int hashCode() {
         return Objects.hash(valueOfSquare);
-    }
-
-    public enum ValueOfSquare {
-
-        EMPTY("X"),
-        BOAT("B"),
-        SUNK_BOAT("S");
-
-        private String representationOnTheBoard;
-
-        ValueOfSquare(String representationOnTheBoard) {
-            this.representationOnTheBoard = representationOnTheBoard;
-        }
-
-        public String getRepresentationOnTheBoard() {
-            return representationOnTheBoard;
-        }
     }
 }
 

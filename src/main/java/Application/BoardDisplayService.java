@@ -1,6 +1,10 @@
 package Application;
 import Domain.Board;
 import Domain.Square;
+import Domain.ValueOfSquare;
+
+import java.net.PortUnreachableException;
+import java.util.List;
 
 public class BoardDisplayService {
 
@@ -14,4 +18,39 @@ public class BoardDisplayService {
         }
         System.out.println();
     }
+
+    public String getColumnRepresentationOnTheBoard(int column) {
+        return createListOfColumnRepresentationOnTheBoard().get(column);
+    }
+
+    public List<String> createListOfColumnRepresentationOnTheBoard() {
+        return List.of("A", "B", "C", "D", "E", "F", "G", "H", "I", "J");
+    }
+
+    public int getRowRepresentationOnTheBoard(int row) {
+        return row - 1;
+    }
+
+    public boolean playerBoatIsInThisPosition(int row, int column, Board board) {
+        return getValueOfSquare(row, column, board).equals(ValueOfSquare.BOAT);
+    }
+
+    public boolean enemyBoatIsInThisPosition(int row, int column, Board board){
+        return getValueOfSquare(getRowRepresentationOnTheBoard(row), column, board).equals(ValueOfSquare.BOAT);
+    }
+
+
+    public ValueOfSquare getValueOfSquare(int row, int column, Board board) {
+        return board.getSquarePosition(row, column).getValueOfSquare();
+    }
+
+    public void sinkEnemyBoat(int row, int column, Board board) {
+        board.getSquares().get(getRowRepresentationOnTheBoard(row)).get(column).setValueOfSquare(ValueOfSquare.SUNK_BOAT);
+    }
+
+    public void sinkPlayerBoat(int row, int column, Board board){
+        board.getSquares().get(row).get(column).setValueOfSquare(ValueOfSquare.SUNK_BOAT);
+
+    }
+
 }

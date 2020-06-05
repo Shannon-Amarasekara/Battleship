@@ -6,16 +6,18 @@ import java.util.Scanner;
 public class UserInputValidationService {
 
     Scanner scanner = new Scanner(System.in);
+    BoardDisplayService boardDisplayService = new BoardDisplayService();
 
-    public int validatePlayerColumnInput(Board board, List<String> columnsAtoJ) {
+    public int validatePlayerColumnInput(Board board) {
         int column;
+        List<String> columnsRepresentationOnTheBoard = boardDisplayService.createListOfColumnRepresentationOnTheBoard();
         if (scanner.hasNextInt()) {
             System.out.println("You need to enter a character, not a number. (A -J");
             scanner.next();
         } else {
             String columnInput = scanner.next();
-            if (columnsAtoJ.contains(columnInput)) {
-                column = columnsAtoJ.indexOf(columnInput);
+            if (columnsRepresentationOnTheBoard.contains(columnInput)) {
+                column = columnsRepresentationOnTheBoard.indexOf(columnInput);
                 if (board.columnExists(column + 1)) {
                     return column;
                 }

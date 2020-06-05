@@ -1,10 +1,7 @@
 package Application;
-
 import Domain.Board;
-
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 import java.util.Scanner;
 
 public class BoatPlacementService {
@@ -36,20 +33,18 @@ public class BoatPlacementService {
                 break;
             }
         }
-
         boardDisplayService.displayBoard(board);
         System.out.println("Here is your board");
         return listOfBoatsPlaced.size();
     }
 
     private void placeBoat(Board board, ArrayList<String> listOfBoatsPlaced) {
-        List<String> columnsAToJ = List.of("A", "B", "C", "D", "E", "F", "G", "H", "I", "J");
-        int column = playerChoosesColumnToPlaceBoat(board, columnsAToJ);
+        int column = playerChoosesColumnToPlaceBoat(board);
         int row = playerChoosesRowToPlaceBoat(board);
-        String position = columnsAToJ.get(column) + row;
+        String position = boardDisplayService.getColumnRepresentationOnTheBoard(column) + row;
 
         if (!listOfBoatsPlaced.contains(position)) {
-            board.placeABoatOnTheBoard(column, row);
+            board.placeABoatOnTheBoard(column, boardDisplayService.getRowRepresentationOnTheBoard(row));
             System.out.println("You have placed your boat in the position " + position + ".");
             listOfBoatsPlaced.add(position);
         } else {
@@ -57,11 +52,11 @@ public class BoatPlacementService {
         }
     }
 
-    public int playerChoosesColumnToPlaceBoat(Board board, List<String> columnsAtoJ) {
+    public int playerChoosesColumnToPlaceBoat(Board board) {
         int column = -1;
         while (column == -1) {
             System.out.println("Choose which column you want to place your boat. (A - J)");
-            column = userInputValidationService.validatePlayerColumnInput(board, columnsAtoJ);
+            column = userInputValidationService.validatePlayerColumnInput(board);
         }
         return column;
     }
