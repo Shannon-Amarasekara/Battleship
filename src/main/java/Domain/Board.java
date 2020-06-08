@@ -17,7 +17,7 @@ public class Board {
     public static List<Square> createListOfTenSquares() {
         List<Square> squaresList = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
-            squaresList.add(new Square(ValueOfSquare.EMPTY));
+            squaresList.add(Square.EMPTY);
         }
         return squaresList;
     }
@@ -33,9 +33,8 @@ public class Board {
     public static Board createBoardWithRandomlyPlacedBoats(int playerBoatsPlacedCount) {
         Board enemyBoard = createABoard();
         for (int i = 0; i < playerBoatsPlacedCount; i++) {
-            int randomColumn = 1 + (int) (Math.random() * 10);
-            int randomRow = 1 + (int) (Math.random() * 10);
-            randomColumn = randomColumn - 1;
+            int randomColumn = (int) (10 * Math.random());
+            int randomRow = (int) (10 * Math.random());
             enemyBoard.placeABoatOnTheBoard(randomColumn, randomRow);
         }
         return enemyBoard;
@@ -51,7 +50,7 @@ public class Board {
 
     public void placeABoatOnTheBoard(int column, int row) {
         Square squareBoat = squares.get(row).get(column);
-        squareBoat.setValueOfSquare(ValueOfSquare.BOAT);
+        squareBoat.setValueOfSquare(Square.BOAT.getValueOfSquare());
     }
 
     public Square getSquarePosition(int row, int column) {
@@ -66,8 +65,8 @@ public class Board {
         for (int i = 0; i < squares.size(); i++) {
             for (int j = 0; j < squares.get(i).size(); j++) {
                 Square square = squares.get(i).get(j);
-                String valueOfSquare = square.getValueOfSquare().getRepresentationOnTheBoard();
-                String value = ValueOfSquare.BOAT.getRepresentationOnTheBoard();
+                String valueOfSquare = square.getValueOfSquare();
+                String value = Square.BOAT.getValueOfSquare();
                 if (valueOfSquare.equals(value)) {
                     return false;
                 }

@@ -1,34 +1,38 @@
 package Domain;
 import java.util.Objects;
+public enum Square {
 
-public class Square {
+    EMPTY("X"),
+    BOAT("B"),
+    SUNK_BOAT("S");
 
-    private ValueOfSquare valueOfSquare;
+    public String valueOfSquare;
 
-    public Square(ValueOfSquare valueOfSquare) {
+    Square(String valueOfSquare) {
         this.valueOfSquare = valueOfSquare;
     }
 
-    public void setValueOfSquare(ValueOfSquare valueOfSquare) {
+    public void setValueOfSquare(String valueOfSquare) {
         this.valueOfSquare = valueOfSquare;
     }
 
-    public ValueOfSquare getValueOfSquare() {
+    public String getValueOfSquare() {
         return valueOfSquare;
     }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Square aSquare = (Square) o;
-        return Objects.equals(valueOfSquare, aSquare.valueOfSquare);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(valueOfSquare);
-    }
 }
+
+//    @Override
+//    public boolean equals(Object o) {
+//        if (this == o) return true;
+//        if (o == null || getClass() != o.getClass()) return false;
+//        Square aSquare = (Square) o;
+//        return Objects.equals(valueOfSquare, aSquare.valueOfSquare);
+//    }
+//
+//    @Override
+//    public int hashCode() {
+//        return Objects.hash(valueOfSquare);
+//    }
+//}
 
 
