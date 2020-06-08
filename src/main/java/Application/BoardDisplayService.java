@@ -1,9 +1,6 @@
 package Application;
 import Domain.Board;
 import Domain.Square;
-import Domain.ValueOfSquare;
-
-import java.net.PortUnreachableException;
 import java.util.List;
 
 public class BoardDisplayService {
@@ -13,7 +10,7 @@ public class BoardDisplayService {
             System.out.println();
             for (int j = 0; j < board.getRow(i).size(); j++) {
                 Square square = board.getSquares().get(i).get(j);
-                System.out.print(" " + square.getValueOfSquare().getRepresentationOnTheBoard() + " ");
+                System.out.print(" " + square.getValueOfSquare() + " ");
             }
         }
         System.out.println();
@@ -32,24 +29,24 @@ public class BoardDisplayService {
     }
 
     public boolean playerBoatIsInThisPosition(int row, int column, Board board) {
-        return getValueOfSquare(row, column, board).equals(ValueOfSquare.BOAT);
+        return getValueOfSquare(row, column, board).equals(Square.BOAT.valueOfSquare);
     }
 
     public boolean enemyBoatIsInThisPosition(int row, int column, Board board){
-        return getValueOfSquare(getRowRepresentationOnTheBoard(row), column, board).equals(ValueOfSquare.BOAT);
+        return getValueOfSquare(getRowRepresentationOnTheBoard(row), column, board).equals(Square.BOAT.valueOfSquare);
     }
 
 
-    public ValueOfSquare getValueOfSquare(int row, int column, Board board) {
+    public String getValueOfSquare(int row, int column, Board board) {
         return board.getSquarePosition(row, column).getValueOfSquare();
     }
 
     public void sinkEnemyBoat(int row, int column, Board board) {
-        board.getSquares().get(getRowRepresentationOnTheBoard(row)).get(column).setValueOfSquare(ValueOfSquare.SUNK_BOAT);
+        board.getSquares().get(getRowRepresentationOnTheBoard(row)).get(column).setValueOfSquare(Square.SUNK_BOAT.valueOfSquare);
     }
 
     public void sinkPlayerBoat(int row, int column, Board board){
-        board.getSquares().get(row).get(column).setValueOfSquare(ValueOfSquare.SUNK_BOAT);
+        board.getSquares().get(row).get(column).setValueOfSquare(Square.SUNK_BOAT.valueOfSquare);
 
     }
 

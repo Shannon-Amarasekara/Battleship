@@ -1,7 +1,6 @@
 package Application;
 import Domain.Board;
 import Domain.Square;
-import Domain.ValueOfSquare;
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -13,6 +12,7 @@ public class BoardAttackService {
     public void playerAndEnemyAttackEachOther(Board playerBoard, Board enemyBoard) {
         HashMap<Integer, Square> positionsAlreadyAttackedByEnemy = createListOfBoardPositions();
         List<String> positionsAlreadyAttackedByPlayer = new CopyOnWriteArrayList<>();
+        //TODO refactor
 
         while (true) {
             attackTheEnemyBoard(enemyBoard, positionsAlreadyAttackedByPlayer);
@@ -71,7 +71,6 @@ public class BoardAttackService {
         columnsAndRows.put("H", 7);
         columnsAndRows.put("I", 8);
         columnsAndRows.put("J", 9);
-
         return columnsAndRows;
     }
 
@@ -108,8 +107,9 @@ public class BoardAttackService {
     public void enemyAttacksThePlayerBoard(Board playerBoard, HashMap<Integer, Square> listOfPositions) {
         int positionToAttack = calculateRandomPositionToAttack(listOfPositions);
         listOfPositions.remove(positionToAttack);
-        int row = positionToAttack / 10;
-        int column = positionToAttack % 10;
+        int row = enemyGetsRowForAttack(positionToAttack);
+        int column = enemyGetsColumnToAttack(positionToAttack);
+        //TODO refactor
 
         String columnAttacked = boardDisplayService.getColumnRepresentationOnTheBoard(column);
 
@@ -124,6 +124,14 @@ public class BoardAttackService {
         }
         boardDisplayService.displayBoard(playerBoard);
         System.out.println("Here is your board.");
+    }
+
+    public int enemyGetsRowForAttack(int position){
+        return position / 10;
+    }
+
+    public int enemyGetsColumnToAttack(int position){
+        return position % 10;
     }
 
     public int calculateRandomPositionToAttack(HashMap<Integer, Square> listOfPositions) {
@@ -153,7 +161,7 @@ public class BoardAttackService {
     public HashMap<Integer, Square> createListOfBoardPositions() {
         HashMap<Integer, Square> listOf99Squares = new HashMap<>();
         for (int i = 0; i < 100; i++) {
-            Square square = new Square(ValueOfSquare.EMPTY);
+            Square square = Square.EMPTY;
             listOf99Squares.put(i, square);
         }
         return listOf99Squares;

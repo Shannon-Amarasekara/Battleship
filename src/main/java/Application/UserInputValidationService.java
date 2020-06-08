@@ -15,7 +15,7 @@ public class UserInputValidationService {
             System.out.println("You need to enter a character, not a number. (A -J");
             scanner.next();
         } else {
-            String columnInput = scanner.next();
+            String columnInput = scanner.next().toUpperCase();
             if (columnsRepresentationOnTheBoard.contains(columnInput)) {
                 column = columnsRepresentationOnTheBoard.indexOf(columnInput);
                 if (board.columnExists(column + 1)) {
