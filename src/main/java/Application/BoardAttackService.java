@@ -1,16 +1,20 @@
 package Application;
+
+import Domain.Attacks;
 import Domain.Board;
 import Domain.Square;
+
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class BoardAttackService {
 
-    UserInputValidationService userInputValidationService = new UserInputValidationService();
-    BoardDisplayService boardDisplayService = new BoardDisplayService();
+    private UserInputValidationService userInputValidationService = new UserInputValidationService();
+    private BoardDisplayService boardDisplayService = new BoardDisplayService();
+    private Attacks attacks = new Attacks();
 
     public void playerAndEnemyAttackEachOther(Board playerBoard, Board enemyBoard) {
-        HashMap<Integer, Square> positionsAlreadyAttackedByEnemy = createListOfBoardPositions();
+        HashMap<Integer, Square> positionsAlreadyAttackedByEnemy = attacks.createListOfBoardPositions();
         List<String> positionsAlreadyAttackedByPlayer = new CopyOnWriteArrayList<>();
         //TODO refactor
 
@@ -34,20 +38,17 @@ public class BoardAttackService {
         while (true) {
             int column = playerChoosesColumnToAttack(board);
             int row = playerChoosesRowToAttack(board);
-            String columnToAttack = boardDisplayService.getColumnRepresentationOnTheBoard(column);
+            String positionName = boardDisplayService.getSquarePositionRepresentationOnTheBoard(column, row);
 
-            if (positionsAlreadyAttacked.contains(columnToAttack + row)) {
+            if (positionsAlreadyAttacked.contains(positionName)) {
                 System.out.println("You have already attacked this position previously.");
-
             } else {
-                positionsAlreadyAttacked.add(columnToAttack + row);
-                System.out.println("You have attacked the enemy board position " + columnToAttack + row);
+                positionsAlreadyAttacked.add(positionName);
+                System.out.println("You have attacked the enemy board position " + positionName);
 
-                if (boardDisplayService.enemyBoatIsInThisPosition(row, column, board)) {
-                    boardDisplayService.sinkEnemyBoat(row, column, board);
+                if (attacks.attackAnEnemyPosition(board, row, column)) {
                     System.out.println("Well done! You have sunk an enemy boat.");
                     break;
-
                 } else {
                     System.out.println("No boat was hit...");
                     break;
@@ -74,22 +75,27 @@ public class BoardAttackService {
         return columnsAndRows;
     }
 
-    public void displayPositionsPreviouslyAttackedByPlayer(List<String> positionsAlreadyAttacked) {
+    public List<List<String>> getListOfPositionNamesAttackedByPlayer(List<String> positionsAlreadyAttacked) {
         HashMap<String, Integer> columnsAndRows = createHashMapOfColumnsAndRowsRepresentationOnTheBoard();
 
-        List<List<String>> positionsInOrder = new CopyOnWriteArrayList<>();
+        List<List<String>> positionNamesAttackedByPlayer = new CopyOnWriteArrayList<>();
         for (int i = 0; i < 10; i++) {
-            positionsInOrder.add(new CopyOnWriteArrayList<>());
+            positionNamesAttackedByPlayer.add(new CopyOnWriteArrayList<>());
         }
 
         for (String position : positionsAlreadyAttacked) {
             String columnOfPosition = String.valueOf(position.charAt(0));
             int keyOfColumn = columnsAndRows.get(columnOfPosition);
-            positionsInOrder.get(keyOfColumn).add(position);
+            positionNamesAttackedByPlayer.get(keyOfColumn).add(position);
         }
+        return positionNamesAttackedByPlayer;
+    }
+
+    public void displayPositionsPreviouslyAttackedByPlayer(List<String> positionsAlreadyAttacked) {
+        List<List<String>> positionNamesAttackedByPlayer = getListOfPositionNamesAttackedByPlayer(positionsAlreadyAttacked);
 
         System.out.println("You previously attacked the following positions: ");
-        for (List<String> columnList : positionsInOrder) {
+        for (List<String> columnList : positionNamesAttackedByPlayer) {
             if (!columnList.isEmpty()) {
                 Collections.sort(columnList);
                 for (String position : columnList) {
@@ -105,39 +111,24 @@ public class BoardAttackService {
 
 
     public void enemyAttacksThePlayerBoard(Board playerBoard, HashMap<Integer, Square> listOfPositions) {
-        int positionToAttack = calculateRandomPositionToAttack(listOfPositions);
+        int positionToAttack = attacks.calculateRandomPositionToAttack(listOfPositions);
         listOfPositions.remove(positionToAttack);
-        int row = enemyGetsRowForAttack(positionToAttack);
-        int column = enemyGetsColumnToAttack(positionToAttack);
-        //TODO refactor
+        int row = attacks.enemyGetsRowForAttack(positionToAttack);
+        int column = attacks.enemyGetsColumnToAttack(positionToAttack);
 
-        String columnAttacked = boardDisplayService.getColumnRepresentationOnTheBoard(column);
+        String position = boardDisplayService.getSquarePositionRepresentationOnTheBoard(column, row + 1);
 
-        if (boardDisplayService.playerBoatIsInThisPosition(row, column, playerBoard)) {
-            boardDisplayService.sinkPlayerBoat(row, column, playerBoard);
-            System.out.println("The enemy attacked position " + columnAttacked + (boardDisplayService.getRowRepresentationOnTheBoard(row)) + " .");
+        if (playerBoard.playerBoatIsInThisPosition(row, column) ) {
+            playerBoard.sinkPlayerBoat(row, column);
+            System.out.println("The enemy attacked position " + position + " .");
             System.out.println("One of your boats was sunk!");
 
         } else {
-            System.out.println("The enemy attacked position " + columnAttacked + (boardDisplayService.getRowRepresentationOnTheBoard(row)) + " .");
+            System.out.println("The enemy attacked position " + position + " .");
             System.out.println("No boat was hit!");
         }
         boardDisplayService.displayBoard(playerBoard);
         System.out.println("Here is your board.");
-    }
-
-    public int enemyGetsRowForAttack(int position){
-        return position / 10;
-    }
-
-    public int enemyGetsColumnToAttack(int position){
-        return position % 10;
-    }
-
-    public int calculateRandomPositionToAttack(HashMap<Integer, Square> listOfPositions) {
-        Random random = new Random();
-        List<Integer> keys = new ArrayList<>(listOfPositions.keySet());
-        return keys.get(random.nextInt(keys.size()));
     }
 
     public int playerChoosesColumnToAttack(Board board) {
@@ -156,15 +147,6 @@ public class BoardAttackService {
             row = userInputValidationService.validatePlayerRowInput(board);
         }
         return row;
-    }
-
-    public HashMap<Integer, Square> createListOfBoardPositions() {
-        HashMap<Integer, Square> listOf99Squares = new HashMap<>();
-        for (int i = 0; i < 100; i++) {
-            Square square = Square.EMPTY;
-            listOf99Squares.put(i, square);
-        }
-        return listOf99Squares;
     }
 
 

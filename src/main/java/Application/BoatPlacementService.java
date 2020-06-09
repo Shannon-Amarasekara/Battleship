@@ -6,27 +6,27 @@ import java.util.Scanner;
 
 public class BoatPlacementService {
 
-    Scanner scanner = new Scanner(System.in);
-    BoardDisplayService boardDisplayService = new BoardDisplayService();
-    UserInputValidationService userInputValidationService = new UserInputValidationService();
+    private Scanner scanner = new Scanner(System.in);
+    private BoardDisplayService boardDisplayService = new BoardDisplayService();
+    private UserInputValidationService userInputValidationService = new UserInputValidationService();
 
     public int placeOneToThreeBoats(Board board) {
         ArrayList<String> listOfBoatsPlaced = new ArrayList<>();
-        placeBoat(board, listOfBoatsPlaced);
+        checkPositionIsAvailableForPlayerToPlaceBoat(board, listOfBoatsPlaced);
         System.out.println("You have placed " + listOfBoatsPlaced.size() + " boat in the following positions: " + listOfBoatsPlaced);
 
         while (listOfBoatsPlaced.size() < 3) {
             System.out.println("Would you like to place another boat? (yes/no)");
-            String answer = scanner.next();
+            String answer = scanner.next().toLowerCase();
 
             while ((!answer.equals("yes")) && (!answer.equals("no"))) {
                 System.out.println("Answer not recognised.");
                 System.out.println("Would you like to place another boat? (yes/no)");
-                answer = scanner.next();
+                answer = scanner.next().toLowerCase();
             }
 
             if (answer.equals("yes")) {
-                placeBoat(board, listOfBoatsPlaced);
+                checkPositionIsAvailableForPlayerToPlaceBoat(board, listOfBoatsPlaced);
                 Collections.sort(listOfBoatsPlaced);
                 System.out.println("You have placed " + listOfBoatsPlaced.size() + " boats in the following positions: " + listOfBoatsPlaced);
             } else {
@@ -38,18 +38,19 @@ public class BoatPlacementService {
         return listOfBoatsPlaced.size();
     }
 
-    private void placeBoat(Board board, ArrayList<String> listOfBoatsPlaced) {
-        int column = playerChoosesColumnToPlaceBoat(board);
-        int row = playerChoosesRowToPlaceBoat(board);
-        String position = boardDisplayService.getColumnRepresentationOnTheBoard(column) + row;
 
-        if (!listOfBoatsPlaced.contains(position)) {
-            board.placeABoatOnTheBoard(column, boardDisplayService.getRowRepresentationOnTheBoard(row));
+    public void checkPositionIsAvailableForPlayerToPlaceBoat(Board board, ArrayList<String> listOfBoatsPlaced) {
+        int column = playerChoosesColumnToPlaceBoat(board);
+        int rowForBoardDisplay = playerChoosesRowToPlaceBoat(board);
+        int row = rowForBoardDisplay - 1;
+        String position = boardDisplayService.getSquarePositionRepresentationOnTheBoard(column, rowForBoardDisplay);
+
+        if (!board.playerBoatIsInThisPosition(row, column)) {
+            board.placeBoat(column, row);
             System.out.println("You have placed your boat in the position " + position + ".");
             listOfBoatsPlaced.add(position);
-        } else {
+        } else
             System.out.println("You already placed a boat in the position " + position);
-        }
     }
 
     public int playerChoosesColumnToPlaceBoat(Board board) {
