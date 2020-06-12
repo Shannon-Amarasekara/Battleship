@@ -13,6 +13,7 @@ public class BoardAttackService {
     private BoardDisplayService boardDisplayService = new BoardDisplayService();
     private Attacks attacks = new Attacks();
 
+
     public void playerAndEnemyAttackEachOther(Board playerBoard, Board enemyBoard) {
         HashMap<Integer, Square> positionsAlreadyAttackedByEnemy = attacks.createListOfBoardPositions();
         List<String> positionsAlreadyAttackedByPlayer = new CopyOnWriteArrayList<>();
@@ -115,11 +116,11 @@ public class BoardAttackService {
         listOfPositions.remove(positionToAttack);
         int row = attacks.enemyGetsRowForAttack(positionToAttack);
         int column = attacks.enemyGetsColumnToAttack(positionToAttack);
-
         String position = boardDisplayService.getSquarePositionRepresentationOnTheBoard(column, row + 1);
+        Square square = playerBoard.getSquarePosition(row, column);
 
-        if (playerBoard.playerBoatIsInThisPosition(row, column) ) {
-            playerBoard.sinkPlayerBoat(row, column);
+        if (playerBoard.playerBoatIsInThisPosition(square) ) {
+            playerBoard.sinkPlayerBoat(square);
             System.out.println("The enemy attacked position " + position + " .");
             System.out.println("One of your boats was sunk!");
 

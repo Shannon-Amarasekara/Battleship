@@ -1,4 +1,5 @@
 package Domain;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,7 +18,7 @@ public class Board {
     public static List<Square> createListOfTenSquares() {
         List<Square> squaresList = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
-            squaresList.add(Square.EMPTY);
+            squaresList.add(new Square(ValueOfSquare.EMPTY));
         }
         return squaresList;
     }
@@ -35,7 +36,8 @@ public class Board {
         for (int i = 0; i < playerBoatsPlacedCount; i++) {
             int randomColumn = (int) (10 * Math.random());
             int randomRow = (int) (10 * Math.random());
-            enemyBoard.placeABoatOnTheBoard(randomColumn, randomRow);
+            Square square = enemyBoard.getSquarePosition(randomRow, randomColumn);
+            square.placeBoat();
         }
         return enemyBoard;
     }
@@ -48,26 +50,33 @@ public class Board {
         return ((column <= squares.size()) && column > 0);
     }
 
-    public void placeABoatOnTheBoard(int column, int row) {
-        Square squareBoat = squares.get(row).get(column);
-        squareBoat.setValueOfSquare(Square.BOAT.getValueOfSquare());
-    }
-
     public Square getSquarePosition(int row, int column) {
         return squares.get(row).get(column);
     }
 
-    public List<Square> getRow(int row) {
-        return squares.get(row);
+    public boolean playerBoatIsInThisPosition(Square square) {
+        return square.getValueOfSquare().equals(ValueOfSquare.BOAT);
     }
 
+    public boolean enemyBoatIsInThisPosition(Square square) {
+        return square.getValueOfSquare().equals(ValueOfSquare.BOAT);
+    }
+
+    public void sinkEnemyBoat(Square square) {
+        square.setValueOfSquare(ValueOfSquare.SUNK_BOAT);
+    }
+
+    public void sinkPlayerBoat(Square square) {
+        square.setValueOfSquare(ValueOfSquare.SUNK_BOAT);
+    }
+
+    //TODO move the above 4 methods to class Square
+
+
     public boolean boardContainsNoBoats() {
-        for (int i = 0; i < squares.size(); i++) {
-            for (int j = 0; j < squares.get(i).size(); j++) {
-                Square square = squares.get(i).get(j);
-                String valueOfSquare = square.getValueOfSquare();
-                String value = Square.BOAT.getValueOfSquare();
-                if (valueOfSquare.equals(value)) {
+        for (List<Square> rows : squares) {
+            for (Square square : rows) {
+                if (square.getValueOfSquare().equals(ValueOfSquare.BOAT)) {
                     return false;
                 }
             }

@@ -1,5 +1,7 @@
 package Application;
 import Domain.Board;
+import Domain.Square;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Scanner;
@@ -44,9 +46,10 @@ public class BoatPlacementService {
         int rowForBoardDisplay = playerChoosesRowToPlaceBoat(board);
         int row = rowForBoardDisplay - 1;
         String position = boardDisplayService.getSquarePositionRepresentationOnTheBoard(column, rowForBoardDisplay);
+        Square square = board.getSquarePosition(row, column);
 
-        if (!board.playerBoatIsInThisPosition(row, column)) {
-            board.placeBoat(column, row);
+        if (!board.playerBoatIsInThisPosition(square)) {
+            square.placeBoat();
             System.out.println("You have placed your boat in the position " + position + ".");
             listOfBoatsPlaced.add(position);
         } else
