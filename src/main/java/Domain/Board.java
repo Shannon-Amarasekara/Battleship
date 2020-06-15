@@ -18,7 +18,8 @@ public class Board {
     public static List<Square> createListOfTenSquares() {
         List<Square> squaresList = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
-            squaresList.add(new Square(ValueOfSquare.EMPTY));
+            squaresList.add(new Square(i, i));
+            squaresList.get(i).setValueOfSquare(ValueOfSquare.EMPTY);
         }
         return squaresList;
     }
@@ -53,25 +54,6 @@ public class Board {
     public Square getSquarePosition(int row, int column) {
         return squares.get(row).get(column);
     }
-
-    public boolean playerBoatIsInThisPosition(Square square) {
-        return square.getValueOfSquare().equals(ValueOfSquare.BOAT);
-    }
-
-    public boolean enemyBoatIsInThisPosition(Square square) {
-        return square.getValueOfSquare().equals(ValueOfSquare.BOAT);
-    }
-
-    public void sinkEnemyBoat(Square square) {
-        square.setValueOfSquare(ValueOfSquare.SUNK_BOAT);
-    }
-
-    public void sinkPlayerBoat(Square square) {
-        square.setValueOfSquare(ValueOfSquare.SUNK_BOAT);
-    }
-
-    //TODO move the above 4 methods to class Square
-
 
     public boolean boardContainsNoBoats() {
         for (List<Square> rows : squares) {

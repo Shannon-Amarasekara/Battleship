@@ -119,8 +119,8 @@ public class BoardAttackService {
         String position = boardDisplayService.getSquarePositionRepresentationOnTheBoard(column, row + 1);
         Square square = playerBoard.getSquarePosition(row, column);
 
-        if (playerBoard.playerBoatIsInThisPosition(square) ) {
-            playerBoard.sinkPlayerBoat(square);
+        if (square.playerBoatIsInThisPosition()) {
+            square.sinkPlayerBoat();
             System.out.println("The enemy attacked position " + position + " .");
             System.out.println("One of your boats was sunk!");
 

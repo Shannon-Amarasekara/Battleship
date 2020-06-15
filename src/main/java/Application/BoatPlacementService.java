@@ -1,4 +1,5 @@
 package Application;
+
 import Domain.Board;
 import Domain.Square;
 
@@ -40,18 +41,22 @@ public class BoatPlacementService {
         return listOfBoatsPlaced.size();
     }
 
-
-    public void checkPositionIsAvailableForPlayerToPlaceBoat(Board board, ArrayList<String> listOfBoatsPlaced) {
+    public Square playerChoosesSquareToAttack(Board board) {
         int column = playerChoosesColumnToPlaceBoat(board);
         int rowForBoardDisplay = playerChoosesRowToPlaceBoat(board);
-        int row = rowForBoardDisplay - 1;
-        String position = boardDisplayService.getSquarePositionRepresentationOnTheBoard(column, rowForBoardDisplay);
-        Square square = board.getSquarePosition(row, column);
+        return new Square(rowForBoardDisplay, column);
+    }
 
-        if (!board.playerBoatIsInThisPosition(square)) {
+    public void checkPositionIsAvailableForPlayerToPlaceBoat(Board board, ArrayList<String> listOfBoatsPlaced) {
+        Square square = playerChoosesSquareToAttack(board);
+        System.out.println("row is " + square.getRow());
+
+        String position = square.getPositionRepresentationOnTheBoard();
+
+        if (!square.playerBoatIsInThisPosition()) {
             square.placeBoat();
             System.out.println("You have placed your boat in the position " + position + ".");
-            listOfBoatsPlaced.add(position);
+//            listOfBoatsPlaced.add(position);
         } else
             System.out.println("You already placed a boat in the position " + position);
     }
