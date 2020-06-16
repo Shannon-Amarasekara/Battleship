@@ -60,7 +60,7 @@ public class Attacks {
     public boolean enemyAttacksPlayerPosition(Board board, int row, int column) {
         Square square = board.getSquarePosition(row, column);
 
-        if (square.playerBoatIsInThisPosition()) {
+        if (square.getValueOfSquare().equals(ValueOfSquare.BOAT)) {
             square.sinkPlayerBoat();
             return true;
         }

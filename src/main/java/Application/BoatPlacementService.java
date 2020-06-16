@@ -2,6 +2,7 @@ package Application;
 
 import Domain.Board;
 import Domain.Square;
+import Domain.ValueOfSquare;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -41,22 +42,22 @@ public class BoatPlacementService {
         return listOfBoatsPlaced.size();
     }
 
-    public Square playerChoosesSquareToAttack(Board board) {
+    public Square playerChoosesSquareToPlaceBoat(Board board) {
         int column = playerChoosesColumnToPlaceBoat(board);
-        int rowForBoardDisplay = playerChoosesRowToPlaceBoat(board);
-        return new Square(rowForBoardDisplay, column);
+        int row = playerChoosesRowToPlaceBoat(board);
+        return board.getSquarePosition(row, column);
+//        return new Square(row, column);
     }
 
-    public void checkPositionIsAvailableForPlayerToPlaceBoat(Board board, ArrayList<String> listOfBoatsPlaced) {
-        Square square = playerChoosesSquareToAttack(board);
-        System.out.println("row is " + square.getRow());
 
+    public void checkPositionIsAvailableForPlayerToPlaceBoat(Board board, ArrayList<String> listOfBoatsPlaced) {
+        Square square = playerChoosesSquareToPlaceBoat(board);
         String position = square.getPositionRepresentationOnTheBoard();
 
-        if (!square.playerBoatIsInThisPosition()) {
+        if (square.playerBoatIsInThisPosition()) {
             square.placeBoat();
             System.out.println("You have placed your boat in the position " + position + ".");
-//            listOfBoatsPlaced.add(position);
+            listOfBoatsPlaced.add(position);
         } else
             System.out.println("You already placed a boat in the position " + position);
     }
