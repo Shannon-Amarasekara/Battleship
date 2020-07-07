@@ -4,8 +4,7 @@ public class Application {
 
     public static void main(String[] args) {
 
-        BattleshipGameController controller = new BattleshipGameController();
-        controller.playBattleship();
-
+        BattleshipGameController battleshipGameController = new BattleshipGameController();
+        battleshipGameController.playBattleship();
     }
 }

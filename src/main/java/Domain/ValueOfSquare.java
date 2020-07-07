@@ -8,7 +8,7 @@ public enum ValueOfSquare {
 
     private String representationOnTheBoard;
 
-     ValueOfSquare(String representationOnTheBoard) {
+    ValueOfSquare(String representationOnTheBoard) {
         this.representationOnTheBoard = representationOnTheBoard;
     }
 
@@ -16,5 +16,3 @@ public enum ValueOfSquare {
         return representationOnTheBoard;
     }
 }
-
-//TODO this class belongs in Application package

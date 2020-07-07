@@ -7,7 +7,7 @@ public class Board {
 
     private List<List<Square>> squares;
 
-    private Board(List<List<Square>> squares) {
+    public Board(List<List<Square>> squares) {
         this.squares = squares;
     }
 
@@ -18,8 +18,9 @@ public class Board {
     public static List<Square> createListOfTenSquares() {
         List<Square> squaresList = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
-            squaresList.add(new Square(i, i));
-            squaresList.get(i).setValueOfSquare(ValueOfSquare.EMPTY);
+            Square square = new Square(ValueOfSquare.EMPTY);
+            squaresList.add(square);
+            square.setValueOfSquare(ValueOfSquare.EMPTY);
         }
         return squaresList;
     }
@@ -32,37 +33,38 @@ public class Board {
         return new Board(squares);
     }
 
-    public static Board createBoardWithRandomlyPlacedBoats(int playerBoatsPlacedCount) {
+    public int boatCountOnABoard() {
+        int boatCount = 0;
+        for (List<Square> rows : squares) {
+            for (Square square : rows) {
+                if (square.getValueOfSquare().equals(ValueOfSquare.BOAT)) {
+                    boatCount++;
+                }
+            }
+        }
+        return boatCount;
+    }
+
+    public void placeOneToThreeBoats(List<Square> boatPositions) {
+        for (Square square : boatPositions) {
+            square.placeBoat();
+        }
+    }
+
+    public static Board createBoardWithRandomlyPlacedBoats(Board board) {
         Board enemyBoard = createABoard();
-        for (int i = 0; i < playerBoatsPlacedCount; i++) {
+        int boatCount = board.boatCountOnABoard();
+
+        for (int i = 0; i < boatCount; i++) {
             int randomColumn = (int) (10 * Math.random());
             int randomRow = (int) (10 * Math.random());
-            Square square = enemyBoard.getSquarePosition(randomRow, randomColumn);
+            Square square = enemyBoard.getSquares().get(randomRow).get(randomColumn);
             square.placeBoat();
         }
         return enemyBoard;
     }
 
-    public boolean rowExists(int row) {
-        return ((row <= squares.size()) && row > 0);
-    }
-
-    public boolean columnExists(int column) {
-        return ((column <= squares.size()) && column > 0);
-    }
-
-    public Square getSquarePosition(int row, int column) {
+    public Square findTheSquareOnTheBoard(int row, int column) {
         return squares.get(row).get(column);
-    }
-
-    public boolean boardContainsNoBoats() {
-        for (List<Square> rows : squares) {
-            for (Square square : rows) {
-                if (square.getValueOfSquare().equals(ValueOfSquare.BOAT)) {
-                    return false;
-                }
-            }
-        }
-        return true;
     }
 }

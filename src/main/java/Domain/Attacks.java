@@ -1,69 +1,53 @@
 package Domain;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
 public class Attacks {
 
-    public boolean enemyAttacks(Board playerBoard, HashMap<Integer, Square> listOfPositions) {
-        int positionToAttack = calculateRandomPositionToAttack(listOfPositions);
-        listOfPositions.remove(positionToAttack);
-        int row = enemyGetsRowForAttack(positionToAttack);
-        int column = enemyGetsColumnToAttack(positionToAttack);
-
-        Square square = playerBoard.getSquarePosition(row, column);
-
-        if (enemyAttacksPlayerPosition(playerBoard, row, column)) {
-            square.sinkPlayerBoat();
-            return true;
-
-        }
-        return false;
-    }
-
-
-    public int calculateRandomPositionToAttack(HashMap<Integer, Square> listOfPositions) {
-        Random random = new Random();
-        List<Integer> keys = new ArrayList<>(listOfPositions.keySet());
-        return keys.get(random.nextInt(keys.size()));
-    }
-
-    public HashMap<Integer, Square> createListOfBoardPositions() {
-        HashMap<Integer, Square> listOf99Squares = new HashMap<>();
+    public List<Integer> createListOfAllPositions() {
+        List<Integer> positions = new ArrayList<>();
         for (int i = 0; i < 100; i++) {
-//            Square square = new Square(ValueOfSquare.EMPTY);
-//            listOf99Squares.put(i, square);
+            positions.add(i);
         }
-        return listOf99Squares;
+        return positions;
     }
 
-    public int enemyGetsRowForAttack(int position) {
-        return position / 10;
+    public boolean positionAlreadyAttacked(List<String> pastPlayerAttacks, String position) {
+        return pastPlayerAttacks.contains(position);
     }
 
-    public int enemyGetsColumnToAttack(int position) {
-        return position % 10;
+    public boolean playerSinksEnemyBoat(List<String> pastPlayerAttacks, String position, Board board, int row, int column) {
+        pastPlayerAttacks.add(position);
+        return board.findTheSquareOnTheBoard(row, column).boatDetectedAndSunk();
     }
 
-    public boolean attackAnEnemyPosition(Board board, int row, int column) {
-        Square squareToAttack = board.getSquarePosition(row - 1, column);
+    public boolean enemySinksBoat(int row, int column, Board board) {
+        return board.findTheSquareOnTheBoard(row, column).boatDetectedAndSunk();
+    }
 
-        if (squareToAttack.enemyBoatIsInThisPosition()) {
-            squareToAttack.sinkEnemyBoat();
-            return true;
+    public String calculateRandomPosition(List<Integer> allPositionsAvailable) {
+        int randomPosition = allPositionsAvailable.get(new Random().nextInt(allPositionsAvailable.size()));
+        allPositionsAvailable.removeAll(Collections.singletonList(randomPosition));
+        return String.valueOf(randomPosition);
+    }
+
+    public int calculateColumnFromRandomPosition(String randomPosition) {
+        return Integer.parseInt(String.valueOf(String.valueOf(randomPosition).charAt(0)));
+    }
+
+    public int calculateRowFromRandomPosition(String randomPosition) {
+        int row = 0;
+        if (String.valueOf(randomPosition).length() > 1) {
+            row = Integer.parseInt(String.valueOf(String.valueOf(randomPosition).charAt(1)));
         }
-        return false;
+        return row;
     }
 
-    public boolean enemyAttacksPlayerPosition(Board board, int row, int column) {
-        Square square = board.getSquarePosition(row, column);
-
-        if (square.getValueOfSquare().equals(ValueOfSquare.BOAT)) {
-            square.sinkPlayerBoat();
-            return true;
-        }
-        return false;
+    public void exitGame() {
+        System.out.println("GAME OVER");
+        System.exit(0);
     }
 }
